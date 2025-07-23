@@ -1,0 +1,14 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* Add magenta background utility if not present */
+.bg-magenta-100 { background-color: #f0abfc; }
+.border-magenta-600 { border-color: #a21caf; }
+
+/* Add indigo background utility if not present */
+.bg-indigo-100 { background-color: #E0E7FF; }
+.border-indigo-700 { border-color: #4338CA; }
