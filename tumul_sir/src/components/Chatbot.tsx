@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { sendChatMessage, ChatMessage } from "@/lib/chat";
+const API_BASE = import.meta.env.VITE_API_BASE;
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -130,7 +131,7 @@ const Chatbot: React.FC = () => {
       setLoading(true);
       // Fetch available slots from backend
       try {
-        const res = await fetch(`/api/available-slots?date=${encodeURIComponent(input.trim())}`);
+        const res = await fetch(`${API_BASE}/api/available-slots?date=${encodeURIComponent(input.trim())}`);
         const data = await res.json();
         setAvailableSlots(data.available || []);
         setMessages(prev => [
@@ -247,7 +248,7 @@ const Chatbot: React.FC = () => {
         setLoading(true);
         // Submit booking to backend
         try {
-          const res = await fetch('/api/contact', {
+          const res = await fetch(`${API_BASE}/api/contact`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -346,7 +347,7 @@ const Chatbot: React.FC = () => {
         setMessages(prev => [...prev, { sender: 'bot', text: 'Thank you for sharing! We look forward to serving you.' }]);
         // Send lead data to backend (update booking/contact record)
         if (bookingId) {
-          fetch(`/api/bookings/${bookingId}`, {
+          fetch(`${API_BASE}/api/bookings/${bookingId}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

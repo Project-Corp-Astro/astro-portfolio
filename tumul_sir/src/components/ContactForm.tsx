@@ -5,7 +5,7 @@ import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button
 import TermsModal from "./TermsModal";
 import RefundPolicyModal from "./RefundPolicyModal";
 
-const API_BASE = import.meta.env.VITE_API_URL || "";
+const API_BASE = import.meta.env.VITE_API_BASE || "";
 
 const validateName = (name: string, field: string) => {
   if (!name.trim()) return `${field} is required.`;
