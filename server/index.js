@@ -63,9 +63,12 @@ app.get("/api/available-slots", async (req, res) => {
 
 app.post("/api/contact", async (req, res) => {
   try {
-    const { firstName, lastName, email, company, service, dob, date, time } = req.body;
+    const { name, email, phone, company, service, dob, date, time } = req.body;
     if (!date || !time) {
       return res.status(400).json({ error: "Missing date or time" });
+    }
+    if (!phone) {
+      return res.status(400).json({ error: "Missing phone number" });
     }
     // Check if slot is already booked
     const existingBooking = await Contact.findOne({ date, time, status: { $ne: 'cancelled' } });
@@ -74,9 +77,9 @@ app.post("/api/contact", async (req, res) => {
     }
     // Create new contact in MongoDB
     const newContact = new Contact({
-      firstName,
-      lastName,
+      name,
       email,
+      phone,
       company,
       service,
       dob,
@@ -93,10 +96,10 @@ app.post("/api/contact", async (req, res) => {
       },
     });
     await transporter.sendMail({
-      from: `"${firstName} ${lastName}" <${email}>`,
+      from: `"${name}" <${email}>`,
       to: process.env.EMAIL_TO,
       subject: `New Consultation Request: ${service}`,
-      text: `\nName: ${firstName} ${lastName}\nEmail: ${email}\nDOB: ${dob}\nDate: ${date}\nTime: ${time}\nCompany: ${company}\nService: ${service}\n`,
+      text: `\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nDOB: ${dob}\nDate: ${date}\nTime: ${time}\nCompany: ${company}\nService: ${service}\n`,
     });
     res.status(200).json({ 
       message: "Message sent successfully!",
