@@ -7,11 +7,17 @@ import RefundPolicyModal from "./RefundPolicyModal";
 
 const API_BASE = import.meta.env.VITE_API_BASE || "";
 
-const validateName = (name: string, field: string) => {
-  if (!name.trim()) return `${field} is required.`;
-  if (!/^[A-Za-z\s]+$/.test(name)) return `${field} must contain only letters.`;
-  if (name.trim().length < 2) return `${field} must be at least 2 characters.`;
-  if (name.trim().length > 30) return `${field} must be at most 30 characters.`;
+const validateFullName = (name: string) => {
+  if (!name.trim()) return "Full Name is required.";
+  if (!/^[A-Za-z\s]+$/.test(name)) return "Full Name must contain only letters.";
+  if (name.trim().length < 2) return "Full Name must be at least 2 characters.";
+  if (name.trim().length > 50) return "Full Name must be at most 50 characters.";
+  return "";
+};
+
+const validatePhone = (phone: string) => {
+  if (!phone.trim()) return "Contact Number is required.";
+  if (!/^\d{10,15}$/.test(phone.trim())) return "Contact Number must be 10-15 digits.";
   return "";
 };
 
@@ -81,9 +87,9 @@ const validateTime = (time: string, availableSlots: string[], date: string) => {
 
 const ContactForm = () => {
   const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
+    fullName: "",
     email: "",
+    phone: "",
     company: "",
     service: "",
     dob: "",
@@ -96,9 +102,9 @@ const ContactForm = () => {
   const [showTerms, setShowTerms] = useState(false);
   const [pendingSubmit, setPendingSubmit] = useState(false);
   const [errors, setErrors] = useState({
-    firstName: "",
-    lastName: "",
+    fullName: "",
     email: "",
+    phone: "",
     company: "",
     dob: "",
     date: "",
@@ -116,14 +122,14 @@ const ContactForm = () => {
 
     let error = "";
     switch (id) {
-      case "firstName":
-        error = validateName(value, "First Name");
-        break;
-      case "lastName":
-        error = validateName(value, "Last Name");
+      case "fullName":
+        error = validateFullName(value);
         break;
       case "email":
         error = validateEmail(value);
+        break;
+      case "phone":
+        error = validatePhone(value);
         break;
       case "company":
         error = validateCompany(value);
@@ -172,9 +178,9 @@ const ContactForm = () => {
 
     const newErrors = {
       ...errors,
-      firstName: validateName(form.firstName, "First Name"),
-      lastName: validateName(form.lastName, "Last Name"),
+      fullName: validateFullName(form.fullName),
       email: validateEmail(form.email),
+      phone: validatePhone(form.phone),
       company: validateCompany(form.company),
       dob: validateDOB(form.dob),
       date: validateConsultationDate(form.date),
@@ -210,14 +216,25 @@ const ContactForm = () => {
     setLoading(true);
     setStatus(null);
     try {
+      // Send all booking fields, including company
+      const payload = {
+        name: form.fullName,
+        email: form.email,
+        phone: form.phone,
+        company: form.company,
+        dob: form.dob,
+        date: form.date,
+        time: form.time,
+        service: form.service
+      };
       const res = await fetch(`${API_BASE}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form)
+        body: JSON.stringify(payload)
       });
       if (res.ok) {
         setStatus("success");
-        setForm({ firstName: "", lastName: "", email: "", company: "", service: "", dob: "", date: "", time: "" });
+        setForm({ fullName: "", email: "", phone: "", company: "", service: "", dob: "", date: "", time: "" });
       } else if (res.status === 409) {
         setStatus("slot-booked");
       } else {
@@ -233,17 +250,15 @@ const ContactForm = () => {
   return (
     <>
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="firstName" className="text-lavender-dark">First Name</Label>
-            <Input id="firstName" value={form.firstName} onChange={handleChange} placeholder="Enter your first name" className="border-orange/30 focus:border-orange bg-white" required />
-            {errors.firstName && <p className="text-red-600 text-sm">{errors.firstName}</p>}
-          </div>
-          <div>
-            <Label htmlFor="lastName" className="text-lavender-dark">Last Name</Label>
-            <Input id="lastName" value={form.lastName} onChange={handleChange} placeholder="Enter your last name" className="border-orange/30 focus:border-orange bg-white" required />
-            {errors.lastName && <p className="text-red-600 text-sm">{errors.lastName}</p>}
-          </div>
+        <div>
+          <Label htmlFor="fullName" className="text-lavender-dark">Full Name</Label>
+          <Input id="fullName" value={form.fullName} onChange={handleChange} placeholder="Enter your full name" className="border-orange/30 focus:border-orange bg-white" required />
+          {errors.fullName && <p className="text-red-600 text-sm">{errors.fullName}</p>}
+        </div>
+        <div>
+          <Label htmlFor="phone" className="text-lavender-dark">Contact Number</Label>
+          <Input id="phone" value={form.phone} onChange={handleChange} placeholder="Enter your contact number" className="border-orange/30 focus:border-orange bg-white" required />
+          {errors.phone && <p className="text-red-600 text-sm">{errors.phone}</p>}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>

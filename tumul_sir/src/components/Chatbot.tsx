@@ -12,7 +12,10 @@ const BOOKING_STEPS = {
   askService: 'askService',
   askDate: 'askDate',
   askSlot: 'askSlot',
-  askInfo: 'askInfo',
+  askName: 'askName',
+  askEmail: 'askEmail',
+  askPhone: 'askPhone',
+  askCompany: 'askCompany',
   askDob: 'askDob',
   confirm: 'confirm',
 };
@@ -22,8 +25,10 @@ type BookingStep = keyof typeof BOOKING_STEPS;
 interface BookingData {
   date?: string;
   slot?: string;
-  name?: string;
+  fullName?: string;
   email?: string;
+  phone?: string;
+  company?: string;
   service?: string;
   dob?: string;
 }
@@ -160,34 +165,98 @@ const Chatbot: React.FC = () => {
         return;
       }
       setBookingData(prev => ({ ...prev, slot: input.trim() }));
-      setBookingStep('askInfo');
+      setBookingStep('askName');
       setLoading(true);
       setTimeout(() => {
-        setMessages(prev => [...prev, { sender: 'bot', text: 'Great! Please provide your name and email in this format: Name, email@example.com (or type "back" to change the slot)' }]);
+        setMessages(prev => [...prev, { sender: 'bot', text: 'Great! What is your full name?' }]);
         setLoading(false);
       }, 600);
       return;
     }
 
-    // Booking flow: handle user info and show summary for confirmation
-    if (bookingStep === 'askInfo') {
+    // Booking flow: handle full name
+    if (bookingStep === 'askName') {
       if (input.trim().toLowerCase() === 'back') {
         setBookingStep('askSlot');
         setMessages(prev => [...prev, { sender: 'bot', text: `Going back. Here are the available slots for ${bookingData.date}:\n${availableSlots.map((slot: string, i: number) => `${i + 1}. ${slot}`).join('\n')}\nPlease type the slot time (e.g., 14:00) to select.` }]);
         return;
       }
-      // Expect input in format: Name, email@example.com
-      const [name, email] = input.split(',').map(s => s.trim());
-      if (!name || !email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-        setMessages(prev => [...prev, { sender: 'bot', text: 'Please provide your full name and a valid email, separated by a comma. Example: John Doe, john@example.com (or type "back" to change the slot)' }]);
+      const fullName = input.trim();
+      if (!fullName || fullName.length < 2 || fullName.length > 50 || !/^[A-Za-z\s]+$/.test(fullName)) {
+        setMessages(prev => [...prev, { sender: 'bot', text: 'Please enter a valid full name (letters and spaces only, 2-50 characters).' }]);
         return;
       }
-      const nameParts = name.split(' ');
-      if (nameParts.length < 2) {
-        setMessages(prev => [...prev, { sender: 'bot', text: 'Please enter your full name (first and last name).' }]);
+      setBookingData(prev => ({ ...prev, fullName }));
+      setBookingStep('askEmail');
+      setLoading(true);
+      setTimeout(() => {
+        setMessages(prev => [...prev, { sender: 'bot', text: 'Thanks! What is your email address?' }]);
+        setLoading(false);
+      }, 600);
+      return;
+    }
+
+    // Booking flow: handle email
+    if (bookingStep === 'askEmail') {
+      if (input.trim().toLowerCase() === 'back') {
+        setBookingStep('askName');
+        setMessages(prev => [...prev, { sender: 'bot', text: 'Going back. What is your full name?' }]);
         return;
       }
-      setBookingData(prev => ({ ...prev, name, email }));
+      const email = input.trim();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+        setMessages(prev => [...prev, { sender: 'bot', text: 'Please enter a valid email address.' }]);
+        return;
+      }
+      setBookingData(prev => ({ ...prev, email }));
+      setBookingStep('askPhone');
+      setLoading(true);
+      setTimeout(() => {
+        setMessages(prev => [...prev, { sender: 'bot', text: 'And your contact number?' }]);
+        setLoading(false);
+      }, 600);
+      return;
+    }
+
+    // Booking flow: handle phone
+    if (bookingStep === 'askPhone') {
+      if (input.trim().toLowerCase() === 'back') {
+        setBookingStep('askEmail');
+        setMessages(prev => [...prev, { sender: 'bot', text: 'Going back. What is your email address?' }]);
+        return;
+      }
+      const phone = input.trim();
+      if (!/^\d{10,15}$/.test(phone)) {
+        setMessages(prev => [...prev, { sender: 'bot', text: 'Please enter a valid contact number (10-15 digits).' }]);
+        return;
+      }
+      setBookingData(prev => ({ ...prev, phone }));
+      setBookingStep('askCompany');
+      setLoading(true);
+      setTimeout(() => {
+        setMessages(prev => [...prev, { sender: 'bot', text: 'What is your company name? (optional, you can leave blank or type "none")' }]);
+        setLoading(false);
+      }, 600);
+      return;
+    }
+
+    // Booking flow: handle company
+    if (bookingStep === 'askCompany') {
+      if (input.trim().toLowerCase() === 'back') {
+        setBookingStep('askPhone');
+        setMessages(prev => [...prev, { sender: 'bot', text: 'Going back. What is your contact number?' }]);
+        return;
+      }
+      const company = input.trim();
+      if (company.length > 50) {
+        setMessages(prev => [...prev, { sender: 'bot', text: 'Company name must be at most 50 characters.' }]);
+        return;
+      }
+      if (company && !/^[A-Za-z0-9\s.,&'-]*$/.test(company)) {
+        setMessages(prev => [...prev, { sender: 'bot', text: 'Company name contains invalid characters.' }]);
+        return;
+      }
+      setBookingData(prev => ({ ...prev, company }));
       setBookingStep('askDob');
       setLoading(true);
       setTimeout(() => {
@@ -209,7 +278,7 @@ const Chatbot: React.FC = () => {
       setTimeout(() => {
         setMessages(prev => [
           ...prev,
-          { sender: 'bot', text: `Please confirm your booking:\nService: ${bookingData.service}\nDate: ${bookingData.date}\nSlot: ${bookingData.slot}\nName: ${bookingData.name}\nEmail: ${bookingData.email}\nDOB: ${dob.toISOString().slice(0, 10)}\n\nType 'yes' to confirm, 'no' to cancel, or 'edit [field]' (e.g., 'edit date', 'edit slot', 'edit name', 'edit email', 'edit dob', 'edit service').` }
+          { sender: 'bot', text: `Please confirm your booking:\nService: ${bookingData.service}\nDate: ${bookingData.date}\nSlot: ${bookingData.slot}\nFull Name: ${bookingData.fullName}\nEmail: ${bookingData.email}\nContact: ${bookingData.phone}\nCompany: ${bookingData.company || 'N/A'}\nDOB: ${dob.toISOString().slice(0, 10)}\n\nType 'yes' to confirm, 'no' to cancel, or 'edit [field]' (e.g., 'edit date', 'edit slot', 'edit fullName', 'edit email', 'edit phone', 'edit dob', 'edit service').` }
         ]);
         setLoading(false);
       }, 600);
@@ -218,7 +287,7 @@ const Chatbot: React.FC = () => {
 
     // Booking flow: handle confirmation
     if (bookingStep === 'confirm') {
-      const editMatch = input.trim().toLowerCase().match(/^edit (service|date|slot|name|email|dob)$/);
+      const editMatch = input.trim().toLowerCase().match(/^edit (service|date|slot|fullName|email|phone|dob)$/);
       if (editMatch) {
         const field = editMatch[1];
         if (field === 'service') {
@@ -230,9 +299,15 @@ const Chatbot: React.FC = () => {
         } else if (field === 'slot') {
           setBookingStep('askSlot');
           setMessages(prev => [...prev, { sender: 'bot', text: `Editing slot. Here are the available slots for ${bookingData.date}:\n${availableSlots.map((slot: string, i: number) => `${i + 1}. ${slot}`).join('\n')}\nPlease type the slot time (e.g., 14:00) to select.` }]);
-        } else if (field === 'name' || field === 'email') {
-          setBookingStep('askInfo');
-          setMessages(prev => [...prev, { sender: 'bot', text: 'Editing your name and email. Please provide your name and email in this format: Name, email@example.com' }]);
+        } else if (field === 'fullName') {
+          setBookingStep('askName');
+          setMessages(prev => [...prev, { sender: 'bot', text: 'Editing your full name. What is your full name?' }]);
+        } else if (field === 'email') {
+          setBookingStep('askEmail');
+          setMessages(prev => [...prev, { sender: 'bot', text: 'Editing your email. What is your email address?' }]);
+        } else if (field === 'phone') {
+          setBookingStep('askPhone');
+          setMessages(prev => [...prev, { sender: 'bot', text: 'Editing your contact number. What is your contact number?' }]);
         } else if (field === 'dob') {
           setBookingStep('askDob');
           setMessages(prev => [...prev, { sender: 'bot', text: 'Editing your date of birth. Please select your date of birth.' }]);
@@ -240,32 +315,34 @@ const Chatbot: React.FC = () => {
         return;
       }
       if (input.trim().toLowerCase() === 'back') {
-        setBookingStep('askInfo');
-        setMessages(prev => [...prev, { sender: 'bot', text: 'Going back. Please provide your name and email in this format: Name, email@example.com' }]);
+        setBookingStep('askPhone');
+        setMessages(prev => [...prev, { sender: 'bot', text: 'Going back. What is your contact number?' }]);
         return;
       }
       if (input.trim().toLowerCase() === 'yes') {
         setLoading(true);
         // Submit booking to backend
         try {
+          const payload = {
+            name: bookingData.fullName,
+            email: bookingData.email,
+            phone: bookingData.phone,
+            company: bookingData.company,
+            dob: bookingData.dob,
+            date: bookingData.date,
+            time: bookingData.slot,
+            service: bookingData.service
+          };
           const res = await fetch(`${API_BASE}/api/contact`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              firstName: bookingData.name?.split(' ')[0] || bookingData.name,
-              lastName: bookingData.name?.split(' ').slice(1).join(' ') || '',
-              email: bookingData.email,
-              dob: bookingData.dob,
-              date: bookingData.date,
-              time: bookingData.slot,
-              service: bookingData.service || 'Astrology Consultation',
-            }),
+            body: JSON.stringify(payload),
           });
           const data = await res.json();
           if (res.ok) {
             setMessages(prev => [
               ...prev,
-              { sender: 'bot', text: `Thank you, ${bookingData.name}! Your appointment is booked for ${bookingData.date} at ${bookingData.slot} (${bookingData.service}). You will receive a confirmation email shortly.` }
+              { sender: 'bot', text: `Thank you, ${bookingData.fullName}! Your appointment is booked for ${bookingData.date} at ${bookingData.slot} (${bookingData.service}).\nContact: ${bookingData.phone}\nCompany: ${bookingData.company || 'N/A'}\nYou will receive a confirmation email shortly.` }
             ]);
             // Store bookingId for lead update
             if (data.bookingId) setBookingId(data.bookingId);
@@ -299,7 +376,7 @@ const Chatbot: React.FC = () => {
         setAvailableSlots([]);
         return;
       } else {
-        setMessages(prev => [...prev, { sender: 'bot', text: "Please type 'yes' to confirm, 'no' to cancel, 'back' to go to the previous step, or 'edit [field]' (e.g., 'edit date', 'edit slot', 'edit name', 'edit email', 'edit service')." }]);
+        setMessages(prev => [...prev, { sender: 'bot', text: "Please type 'yes' to confirm, 'no' to cancel, 'back' to go to the previous step, or 'edit [field]' (e.g., 'edit date', 'edit slot', 'edit name', 'edit email', 'edit phone', 'edit service')." }]);
         return;
       }
     }
