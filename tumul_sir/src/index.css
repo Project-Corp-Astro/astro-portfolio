@@ -209,3 +209,6 @@ body, p, .font-body, .font-sans {
     background-color: hsl(var(--lavender-dark));
   }
 }
+
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
