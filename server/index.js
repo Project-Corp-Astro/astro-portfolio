@@ -16,6 +16,109 @@ connectDB();
 const app = express();
 app.use(cors());
 app.use(express.json());
+// Reschedule a booking by ASTRO-ID
+app.patch("/api/bookings/:astroId/reschedule", async (req, res) => {
+  try {
+    let { astroId } = req.params;
+    if (!req.body) {
+      return res.status(400).json({ error: "Missing request body. Did you forget to set Content-Type: application/json?" });
+    }
+    const { date, time } = req.body;
+    if (!astroId || typeof astroId !== 'string') {
+      return res.status(400).json({ error: "Missing or invalid ASTRO-ID" });
+    }
+    astroId = astroId.trim().toUpperCase();
+    if (!/^ASTRO\d{5}$/.test(astroId)) {
+      return res.status(400).json({ error: "Invalid ASTRO-ID format. Should be ASTRO12345." });
+    }
+    if (!date || !time) {
+      return res.status(400).json({ error: "Missing new date or time" });
+    }
+    // Check if the new slot is already booked
+    const slotTaken = await Contact.findOne({ date, time, status: { $ne: 'cancelled' } });
+    if (slotTaken) {
+      return res.status(409).json({ message: "Slot already booked" });
+    }
+    // Log the query for debugging
+    console.log('[Reschedule] Attempt:', { astroId, date, time });
+    // Log all bookings with this ASTRO-ID for debugging
+    const allBookings = await Contact.find({ astroId: astroId });
+    console.log('[Reschedule] All bookings with ASTRO-ID:', astroId, allBookings);
+    // Find the booking by ASTRO-ID (case-insensitive)
+    const query = { astroId: astroId, status: { $ne: 'cancelled' } };
+    console.log('[Reschedule] Query:', query);
+    const booking = await Contact.findOneAndUpdate(
+      query,
+      { date, time },
+      { new: true }
+    );
+    if (!booking) {
+      console.log('[Reschedule] Failed: No booking found for', astroId, 'Query:', query);
+      return res.status(404).json({ error: "Booking not found or already cancelled" });
+    }
+    console.log('[Reschedule] Success:', booking);
+    // Send email notification for reschedule
+    try {
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      });
+      await transporter.sendMail({
+        from: `"${booking.name}" <${booking.email}>`,
+        to: process.env.EMAIL_TO,
+        subject: `Consultation Rescheduled: ${booking.service}`,
+        text: `The following booking has been rescheduled:\n\nName: ${booking.name}\nEmail: ${booking.email}\nPhone: ${booking.phone}\nConsultation ID: ${booking.astroId}\nNew Date: ${booking.date}\nNew Time: ${booking.time}\nService: ${booking.service}`,
+      });
+    } catch (mailErr) {
+      console.error('[Reschedule] Failed to send email:', mailErr);
+    }
+    res.json({ message: "Booking rescheduled successfully", booking });
+  } catch (error) {
+    console.error('[Reschedule] Error:', error);
+    res.status(500).json({ error: "Failed to reschedule booking", details: error.message });
+  }
+});
+
+// Cancel a booking by ASTRO-ID
+app.patch("/api/bookings/:astroId/cancel", async (req, res) => {
+  try {
+    const { astroId } = req.params;
+    const booking = await Contact.findOneAndUpdate(
+      { astroId, status: { $ne: 'cancelled' } },
+      { status: 'cancelled' },
+      { new: true }
+    );
+    if (!booking) {
+      return res.status(404).json({ error: "Booking not found or already cancelled" });
+    }
+    // Send email notification for cancellation
+    try {
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      });
+      await transporter.sendMail({
+        from: `"${booking.name}" <${booking.email}>`,
+        to: process.env.EMAIL_TO,
+        subject: `Consultation Cancelled: ${booking.service}`,
+        text: `The following booking has been cancelled:\n\nName: ${booking.name}\nEmail: ${booking.email}\nPhone: ${booking.phone}\nConsultation ID: ${booking.astroId}\nDate: ${booking.date}\nTime: ${booking.time}\nService: ${booking.service}`,
+      });
+    } catch (mailErr) {
+      console.error('[Cancel] Failed to send email:', mailErr);
+    }
+    res.json({ message: "Booking cancelled successfully", booking });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to cancel booking", details: error.message });
+  }
+});
+app.use(cors());
+app.use(express.json());
 
 // Helper: generate all slots for a day
 function getAllSlots() {
@@ -75,16 +178,18 @@ app.post("/api/contact", async (req, res) => {
     if (existingBooking) {
       return res.status(409).json({ message: "Slot already booked" });
     }
+    // Generate a unique ASTRO-ID (e.g., ASTRO12345)
+    let astroId;
+    let isUnique = false;
+    while (!isUnique) {
+      const randomNum = Math.floor(10000 + Math.random() * 90000); // 5 digits
+      astroId = `ASTRO${randomNum}`;
+      const existing = await Contact.findOne({ astroId });
+      if (!existing) isUnique = true;
+    }
     // Create new contact in MongoDB
     const newContact = new Contact({
-      name,
-      email,
-      phone,
-      company,
-      service,
-      dob,
-      date,
-      time
+      name, email,phone, company, service, dob, date, time, astroId
     });
     await newContact.save();
     // Send email notification
@@ -99,11 +204,11 @@ app.post("/api/contact", async (req, res) => {
       from: `"${name}" <${email}>`,
       to: process.env.EMAIL_TO,
       subject: `New Consultation Request: ${service}`,
-      text: `\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nDOB: ${dob}\nDate: ${date}\nTime: ${time}\nCompany: ${company}\nService: ${service}\n`,
+      text: `\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nDOB: ${dob}\nDate: ${date}\nTime: ${time}\nCompany: ${company}\nService: ${service}\nConsultation ID: ${astroId}\n`,
     });
     res.status(200).json({ 
       message: "Message sent successfully!",
-      bookingId: newContact._id 
+      bookingId: astroId 
     });
   } catch (error) {
     console.error('Error processing contact form:', error);
