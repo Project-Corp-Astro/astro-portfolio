@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import TermsModal from "./TermsModal";
 import RefundPolicyModal from "./RefundPolicyModal";
+import { YellowMetallicButton } from "./ui/yellow-metallic-button";
 
 const API_BASE = import.meta.env.VITE_API_BASE || "";
 
@@ -86,6 +87,7 @@ const validateTime = (time: string, availableSlots: string[], date: string) => {
 };
 
 const ContactForm = () => {
+  const [activeTab, setActiveTab] = useState<'book' | 'manage'>('book');
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -97,6 +99,14 @@ const ContactForm = () => {
     time: ""
   });
   const [status, setStatus] = useState<string | null>(null);
+  const [consultationId, setConsultationId] = useState<string | null>(null);
+  // Manage Booking state
+  const [manageId, setManageId] = useState('');
+  const [manageAction, setManageAction] = useState<'none' | 'reschedule' | 'cancel'>('none');
+  const [manageStatus, setManageStatus] = useState<string | null>(null);
+  const [rescheduleDate, setRescheduleDate] = useState('');
+  const [rescheduleSlots, setRescheduleSlots] = useState<string[]>([]);
+  const [rescheduleSlot, setRescheduleSlot] = useState('');
   const [loading, setLoading] = useState(false);
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);
   const [showTerms, setShowTerms] = useState(false);
@@ -115,6 +125,7 @@ const ContactForm = () => {
   const [refundAccepted, setRefundAccepted] = useState(false);
   const [showRefund, setShowRefund] = useState(false);
   const [refundError, setRefundError] = useState("");
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
@@ -233,6 +244,8 @@ const ContactForm = () => {
         body: JSON.stringify(payload)
       });
       if (res.ok) {
+        const data = await res.json();
+        setConsultationId(data.bookingId);
         setStatus("success");
         setForm({ fullName: "", email: "", phone: "", company: "", service: "", dob: "", date: "", time: "" });
       } else if (res.status === 409) {
@@ -249,7 +262,18 @@ const ContactForm = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="flex justify-center mb-6">
+        <button
+          className={`px-6 py-2 rounded-t-lg font-semibold border-b-2 transition-colors duration-200 ${activeTab === 'book' ? 'border-orange-500 text-orange-700 bg-orange-50' : 'border-transparent text-gray-500 bg-white'}`}
+          onClick={() => setActiveTab('book')}
+        >Book Session</button>
+        <button
+          className={`px-6 py-2 rounded-t-lg font-semibold border-b-2 transition-colors duration-200 ${activeTab === 'manage' ? 'border-orange-500 text-orange-700 bg-orange-50' : 'border-transparent text-gray-500 bg-white'}`}
+          onClick={() => setActiveTab('manage')}
+        >Manage Booking</button>
+      </div>
+      {activeTab === 'book' && (
+        <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <Label htmlFor="fullName" className="text-lavender-dark">Full Name</Label>
           <Input id="fullName" value={form.fullName} onChange={handleChange} placeholder="Enter your full name" className="border-orange/30 focus:border-orange bg-white" required />
@@ -309,10 +333,166 @@ const ContactForm = () => {
         <div className="flex justify-center">
           <InteractiveHoverButton type="submit" className="w-full sm:w-auto" text={loading ? "Booking..." : "Book Consultation"} disabled={loading} />
         </div>
-        {status === "success" && <p className="text-green-600 text-center">Your booking was successful!</p>}
+        {status === "success" && (
+          <div className="text-green-600 text-center">
+            <p>Your booking was successful!</p>
+            {consultationId && (
+              <p className="mt-1">Your Consultation ID is: <span className="font-mono text-orange-700">{consultationId}</span></p>
+            )}
+          </div>
+        )}
         {status === "slot-booked" && <p className="text-orange-600 text-center">This slot is already booked. Please choose another.</p>}
         {status === "error" && <p className="text-red-600 text-center">Something went wrong. Please try again.</p>}
-      </form>
+        </form>
+      )}
+      {activeTab === 'manage' && (
+        <div className="space-y-6 bg-white p-6 rounded-xl border border-orange-100 shadow">
+          <div>
+            <label htmlFor="manageId" className="block text-lavender-dark font-semibold mb-2">Consultation ID (ASTRO-ID)</label>
+            <input
+              id="manageId"
+              type="text"
+              value={manageId}
+              onChange={e => {
+                setManageId(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ""));
+                setManageAction('none');
+                setManageStatus(null);
+              }}
+              placeholder="e.g. ASTRO12345"
+              className="w-full px-4 py-2 border border-orange-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
+              maxLength={10}
+              disabled={loading}
+            />
+          </div>
+          {manageId.match(/^ASTRO\d{5}$/) && manageAction === 'none' && !loading && (
+            <div className="flex gap-4 justify-center">
+              <InteractiveHoverButton
+                className="w-auto px-4 py-1 text-sm"
+                onClick={() => { setManageAction('reschedule'); setManageStatus(null); }}
+                type="button"
+                text="Reschedule"
+              />
+              <InteractiveHoverButton
+                className="w-auto px-4 py-1 text-sm"
+                onClick={() => setShowCancelConfirm(true)}
+                type="button"
+                text="Cancel Consultation"
+              />
+            </div>
+          )}
+          {/* Cancel confirmation dialog */}
+          {showCancelConfirm && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
+              <div className="bg-white p-6 rounded-xl shadow-xl border border-orange-200 max-w-xs w-full">
+                <p className="text-center text-orange-700 font-semibold mb-4">Are you sure you want to cancel this booking?</p>
+                <div className="flex gap-4 justify-center">
+                  <button
+                    className="bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-full px-5 py-2 shadow"
+                    onClick={async () => {
+                      setShowCancelConfirm(false);
+                      setLoading(true);
+                      setManageStatus('Processing...');
+                      try {
+                        const res = await fetch(`${API_BASE}/api/bookings/${manageId}/cancel`, { method: 'PATCH' });
+                        const data = await res.json();
+                        if (res.ok) {
+                          setManageStatus('Booking cancelled successfully.');
+                          setManageId('');
+                          setManageAction('none');
+                        } else {
+                          setManageStatus(data.error || 'Could not cancel booking.');
+                        }
+                      } catch {
+                        setManageStatus('Could not cancel booking. Please try again.');
+                      }
+                      setLoading(false);
+                    }}
+                    type="button"
+                    disabled={loading}
+                  >Yes, Cancel</button>
+                  <button
+                    className="bg-orange-100 hover:bg-orange-200 text-orange-700 font-semibold rounded-full px-5 py-2 border border-orange-300 shadow"
+                    onClick={() => setShowCancelConfirm(false)}
+                    type="button"
+                    disabled={loading}
+                  >No</button>
+                </div>
+              </div>
+            </div>
+          )}
+          {/* Reschedule flow */}
+          {manageAction === 'reschedule' && (
+            <div className="space-y-4">
+              <label className="block text-lavender-dark font-semibold">New Date</label>
+              <input
+                type="date"
+                value={rescheduleDate}
+                onChange={async e => {
+                  setRescheduleDate(e.target.value);
+                  setRescheduleSlot('');
+                  setManageStatus(null);
+                  if (e.target.value) {
+                    const res = await fetch(`${API_BASE}/api/available-slots?date=${e.target.value}`);
+                    const data = await res.json();
+                    setRescheduleSlots(data.available || []);
+                  } else {
+                    setRescheduleSlots([]);
+                  }
+                }}
+                className="w-full px-4 py-2 border border-orange-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
+                disabled={loading}
+              />
+              {rescheduleSlots.length > 0 && (
+                <div>
+                  <label className="block text-lavender-dark font-semibold mb-1">Select New Time</label>
+                  <select
+                    value={rescheduleSlot}
+                    onChange={e => setRescheduleSlot(e.target.value)}
+                    className="w-full px-3 py-2 border border-orange-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
+                    disabled={loading}
+                  >
+                    <option value="">Select a time</option>
+                    {rescheduleSlots.map(slot => (
+                      <option key={slot} value={slot}>{slot}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              <button
+                className="bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-full px-5 py-2 shadow mt-2"
+                disabled={!rescheduleDate || !rescheduleSlot || loading}
+                onClick={async () => {
+                  setManageStatus('Processing...');
+                  setLoading(true);
+                  try {
+                    const res = await fetch(`${API_BASE}/api/bookings/${manageId}/reschedule`, {
+                      method: 'PATCH',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ date: rescheduleDate, time: rescheduleSlot })
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                      setManageStatus('Booking rescheduled successfully.');
+                      setManageId('');
+                      setManageAction('none');
+                      setRescheduleDate('');
+                      setRescheduleSlot('');
+                      setRescheduleSlots([]);
+                    } else {
+                      setManageStatus(data.error || 'Could not reschedule booking.');
+                    }
+                  } catch {
+                    setManageStatus('Could not reschedule booking. Please try again.');
+                  }
+                  setLoading(false);
+                }}
+                type="button"
+              >Confirm Reschedule</button>
+            </div>
+          )}
+          {manageStatus && <p className="text-center text-orange-700 font-semibold mt-2">{manageStatus}</p>}
+        </div>
+      )}
       <TermsModal
         open={showTerms}
         onAccept={handleAcceptTerms}

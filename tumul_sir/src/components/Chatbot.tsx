@@ -78,6 +78,15 @@ const Chatbot: React.FC = () => {
     setMessages([...messages, userMessage]);
     setInput('');
 
+    // If user asks about cancel or reschedule, prompt to use Contact Form
+    if (/\b(cancel|reschedule)\b/i.test(input)) {
+      setMessages(prev => [
+        ...prev,
+        { sender: 'bot', text: 'To cancel or reschedule your booking, please use the Manage Booking section in the Contact Form below.' }
+      ]);
+      return;
+    }
+
     // Booking flow: detect intent and start booking
     if (bookingStep === 'idle' && isBookingIntent(input)) {
       setBookingStep('askService');
@@ -349,7 +358,10 @@ const Chatbot: React.FC = () => {
           });
           const data = await res.json();
           if (res.ok) {
-            let confirmationText = `Thank you, ${bookingData.fullName}! Your appointment is booked for ${bookingData.date} at ${bookingData.slot} (${bookingData.service}).\nContact: ${bookingData.phone}\nCompany: ${bookingData.company || 'N/A'}\nYou will receive a confirmation email shortly.`;
+            let confirmationText = `Thank you, ${bookingData.fullName}! Your appointment is booked for ${bookingData.date} at ${bookingData.slot} (${bookingData.service}).\nContact: ${bookingData.phone}\nCompany: ${bookingData.company || 'N/A'}\nYour Consultation ID is: ${data.bookingId}\nYou will receive a confirmation email shortly.`;
+            if (data.bookingId) {
+              confirmationText += `\n\nYour ASTRO-ID: ${data.bookingId}`;
+            }
             if (data.calendarLink) {
               confirmationText += `\n\nAdd to your calendar: ${data.calendarLink}`;
             }
