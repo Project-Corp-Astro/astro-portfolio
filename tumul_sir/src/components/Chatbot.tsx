@@ -131,18 +131,24 @@ const Chatbot: React.FC = () => {
         setMessages(prev => [...prev, { sender: 'bot', text: 'Please enter a valid date in YYYY-MM-DD format, or type "back" to change the service.' }]);
         return;
       }
-      setBookingData(prev => ({ ...prev, date: input.trim() }));
+      // Use local date string if selectedDate is set
+      let localDate = input.trim();
+      if (selectedDate) {
+        const pad = (n: number) => n.toString().padStart(2, '0');
+        localDate = `${selectedDate.getFullYear()}-${pad(selectedDate.getMonth() + 1)}-${pad(selectedDate.getDate())}`;
+      }
+      setBookingData(prev => ({ ...prev, date: localDate }));
       setBookingStep('askSlot');
       setLoading(true);
       // Fetch available slots from backend
       try {
-        const res = await fetch(`${API_BASE}/api/available-slots?date=${encodeURIComponent(input.trim())}`);
+        const res = await fetch(`${API_BASE}/api/available-slots?date=${encodeURIComponent(localDate)}`);
         const data = await res.json();
         setAvailableSlots(data.available || []);
         setMessages(prev => [
           ...prev,
           { sender: 'bot', text: data.available && data.available.length > 0
-            ? `Here are the available slots for ${input.trim()}:\n${data.available.map((slot: string, i: number) => `${i + 1}. ${slot}`).join('\n')}\nPlease type the slot time (e.g., 14:00) to select, or type "back" to change the date.`
+            ? `Here are the available slots for ${localDate}:\n${data.available.map((slot: string, i: number) => `${i + 1}. ${slot}`).join('\n')}\nPlease type the slot time (e.g., 14:00) to select, or type "back" to change the date.`
             : 'Sorry, there are no available slots for that date. Please enter another date (YYYY-MM-DD), or type "back" to change the service.'
           }
         ]);
@@ -272,13 +278,16 @@ const Chatbot: React.FC = () => {
         setMessages(prev => [...prev, { sender: 'bot', text: 'Please select your date of birth using the date picker below.' }]);
         return;
       }
-      setBookingData(prev => ({ ...prev, dob: dob.toISOString().slice(0, 10) }));
+      // Use local date string instead of UTC
+      const pad = (n: number) => n.toString().padStart(2, '0');
+      const localDob = `${dob.getFullYear()}-${pad(dob.getMonth() + 1)}-${pad(dob.getDate())}`;
+      setBookingData(prev => ({ ...prev, dob: localDob }));
       setBookingStep('confirm');
       setLoading(true);
       setTimeout(() => {
         setMessages(prev => [
           ...prev,
-          { sender: 'bot', text: `Please confirm your booking:\nService: ${bookingData.service}\nDate: ${bookingData.date}\nSlot: ${bookingData.slot}\nFull Name: ${bookingData.fullName}\nEmail: ${bookingData.email}\nContact: ${bookingData.phone}\nCompany: ${bookingData.company || 'N/A'}\nDOB: ${dob.toISOString().slice(0, 10)}\n\nType 'yes' to confirm, 'no' to cancel, or 'edit [field]' (e.g., 'edit date', 'edit slot', 'edit fullName', 'edit email', 'edit phone', 'edit dob', 'edit service').` }
+          { sender: 'bot', text: `Please confirm your booking:\nService: ${bookingData.service}\nDate: ${bookingData.date}\nSlot: ${bookingData.slot}\nFull Name: ${bookingData.fullName}\nEmail: ${bookingData.email}\nContact: ${bookingData.phone}\nCompany: ${bookingData.company || 'N/A'}\nDOB: ${localDob}\n\nType 'yes' to confirm, 'no' to cancel, or 'edit [field]' (e.g., 'edit date', 'edit slot', 'edit fullName', 'edit email', 'edit phone', 'edit dob', 'edit service').` }
         ]);
         setLoading(false);
       }, 600);
@@ -340,9 +349,13 @@ const Chatbot: React.FC = () => {
           });
           const data = await res.json();
           if (res.ok) {
+            let confirmationText = `Thank you, ${bookingData.fullName}! Your appointment is booked for ${bookingData.date} at ${bookingData.slot} (${bookingData.service}).\nContact: ${bookingData.phone}\nCompany: ${bookingData.company || 'N/A'}\nYou will receive a confirmation email shortly.`;
+            if (data.calendarLink) {
+              confirmationText += `\n\nAdd to your calendar: ${data.calendarLink}`;
+            }
             setMessages(prev => [
               ...prev,
-              { sender: 'bot', text: `Thank you, ${bookingData.fullName}! Your appointment is booked for ${bookingData.date} at ${bookingData.slot} (${bookingData.service}).\nContact: ${bookingData.phone}\nCompany: ${bookingData.company || 'N/A'}\nYou will receive a confirmation email shortly.` }
+              { sender: 'bot', text: confirmationText }
             ]);
             // Store bookingId for lead update
             if (data.bookingId) setBookingId(data.bookingId);
@@ -463,8 +476,10 @@ const Chatbot: React.FC = () => {
   // When a date is picked from the calendar, auto-fill input and send
   useEffect(() => {
     if (bookingStep === 'askDate' && selectedDate) {
-      const formatted = selectedDate.toISOString().slice(0, 10);
-      setInput(formatted);
+      // Use local date string instead of UTC
+      const pad = (n: number) => n.toString().padStart(2, '0');
+      const localDate = `${selectedDate.getFullYear()}-${pad(selectedDate.getMonth() + 1)}-${pad(selectedDate.getDate())}`;
+      setInput(localDate);
       setTimeout(() => {
         sendMessage();
         setSelectedDate(null);
@@ -602,8 +617,10 @@ const Chatbot: React.FC = () => {
                   minDate={new Date()}
                   dateFormat="yyyy-MM-dd"
                   placeholderText="Select a date"
-                  className="px-3 py-2 rounded-lg border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm bg-orange-50 w-full"
-                  inline={false}
+                  className="w-full px-4 py-2 rounded-lg border border-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-400 text-base bg-white shadow-sm transition-all duration-200"
+                  popperClassName="z-[1100]"
+                  showPopperArrow={true}
+                  calendarClassName="rounded-xl border border-orange-200 shadow-lg bg-white"
                 />
               </div>
             )}
