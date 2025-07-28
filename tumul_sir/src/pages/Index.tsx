@@ -70,10 +70,11 @@ const Index = () => {
           <div ref={videoScrollerRef} className="flex gap-8 overflow-x-auto pb-4 hide-scrollbar">
             {/* Render the video list twice for seamless looping */}
             {[...videoIds, ...videoIds].map((id, idx) => (
-              <div key={idx} className="min-w-[320px] max-w-[400px] aspect-w-16 aspect-h-9 rounded-2xl shadow-lg border border-orange-100 overflow-hidden transition-transform duration-300 hover:scale-105 bg-white relative">
+              <div key={idx} className="min-w-[500px] max-w-[700px] h-[400px] rounded-2xl shadow-lg border border-orange-100 overflow-hidden transition-transform duration-300 hover:scale-105 bg-white relative">
+              {/* <div key={idx} className="min-w-[320px] max-w-[400px] h-[600px] rounded-2xl shadow-lg border border-orange-100 overflow-hidden transition-transform duration-300 hover:scale-105 bg-white relative"> */}
                 <div className="absolute inset-0 bg-white" />
                 <iframe
-                  className="relative z-10 rounded-2xl"
+                  className="relative z-10 aspect-w-1 aspect-h-1 rounded-2xl"
                   width="100%"
                   height="100%"
                   src={`https://www.youtube.com/embed/${id}`}
