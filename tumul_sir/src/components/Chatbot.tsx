@@ -45,7 +45,10 @@ const Chatbot: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); // maximized/minimized state
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [isMinimizing, setIsMinimizing] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [bookingStep, setBookingStep] = useState<BookingStep>('idle');
   const [bookingData, setBookingData] = useState<BookingData>({});
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);
@@ -500,79 +503,214 @@ const Chatbot: React.FC = () => {
     // eslint-disable-next-line
   }, [selectedDate]);
 
+  // Helper to open/close with animation
+  const handleToggle = () => {
+    if (open) {
+      setIsMinimizing(true);
+      setTimeout(() => {
+        setOpen(false);
+        setIsMinimizing(false);
+      }, 500); // match new animation duration
+    } else {
+      setOpen(true);
+      // Add welcome message when first opened
+      if (messages.length === 0) {
+        setTimeout(() => {
+          setMessages([{
+            sender: 'bot',
+            text: 'Namaste! 🙏 I am Astro-Ratan, your cosmic guide. How may I assist you today? You can ask me about astrology, numerology, or book a consultation with Dr. Tumul Raathi.'
+          }]);
+        }, 300);
+      }
+    }
+  };
+
+  // Helper to close with animation
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setOpen(false);
+      setIsClosing(false);
+    }, 350); // match fade-out duration
+  };
+
   return (
     <>
-      {/* Floating Chatbot Button */}
+      {/* Floating Chatbot Button - always visible */}
       <div className="fixed bottom-8 right-8 z-[1000]">
-        {!open && (
-          <button
-            onClick={() => setOpen(true)}
-            className="bg-orange-500 hover:bg-orange-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg transition-all duration-200 focus:outline-none border-4 border-white"
-            aria-label="Open chatbot"
-          >
-            {/* Chat icon */}
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" fill="white" />
-              <path d="M8 13h8M8 9h8" stroke="#f97316" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-          </button>
-        )}
+        <button
+          onClick={handleToggle}
+          className={`bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-2xl focus:outline-none border-4 border-white/20 backdrop-blur-sm transition-all duration-300
+            hover:scale-110 hover:shadow-[0_0_32px_0_rgba(251,146,60,0.5)] hover:ring-4 hover:ring-orange-300/40
+            ${open || isAnimating ? 'ring-4 ring-orange-300/40 pointer-events-none opacity-80' : ''}`}
+          aria-label="Toggle Astro-Ratan"
+          disabled={isAnimating}
+        >
+          {/* Astrology icon */}
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" fill="white" />
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#f97316"/>
+          </svg>
+        </button>
       </div>
-      {/* Chatbot Window */}
-      {open && (
-        <div className="fixed bottom-28 right-8 w-[90vw] max-w-sm bg-white rounded-2xl shadow-2xl border border-orange-200 flex flex-col z-[1001] animate-fade-in">
-          {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 bg-orange-500 rounded-t-2xl">
-            <div className="flex items-center gap-2">
-              <img src={AVATAR_URL} alt="Astrologer Avatar" className="w-8 h-8 rounded-full border-2 border-white" />
-              <span className="text-white font-semibold text-base">Ask Dr. Tumul Raathi</span>
+      
+      {/* Modern Glassmorphism Chatbot Modal - anchored to button */}
+      {(open || isMinimizing) && (
+        <div className="fixed inset-0 z-[1001] flex items-end justify-end" style={{ pointerEvents: 'auto' }}>
+          {/* Backdrop covers the whole modal and is clickable, with ultra-smooth fade */}
+          <div
+            className={`absolute inset-0 bg-black/20 backdrop-blur-sm cursor-pointer transition-all duration-500 ${isMinimizing ? 'opacity-0' : 'opacity-100'}`}
+            onClick={handleToggle}
+            style={{ zIndex: 1 }}
+          />
+          {/* Chat Window with ultra-smooth pop/minimize animation and opacity/scale */}
+          <div className={`relative w-[90vw] max-w-md md:max-w-lg h-[80vh] md:h-[70vh] bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 flex flex-col
+            ${isMinimizing ? 'animate-chat-minimize opacity-0 scale-95' : 'animate-chat-pop opacity-100 scale-100'}`}
+            style={{ zIndex: 2, right: '2rem', bottom: '6.5rem', position: 'absolute', transition: 'opacity 0.5s cubic-bezier(0.4,0.2,0.2,1.1), transform 0.5s cubic-bezier(0.4,0.2,0.2,1.1)' }}>
+            <style>{`
+              @keyframes chat-pop {
+                0% { opacity: 0; transform: translateY(40px) scale(0.92); }
+                60% { opacity: 1; transform: translateY(-8px) scale(1.04); }
+                80% { opacity: 1; transform: translateY(0) scale(1.02); }
+                100% { opacity: 1; transform: translateY(0) scale(1); }
+              }
+              .animate-chat-pop {
+                animation: chat-pop 0.5s cubic-bezier(0.4,0.2,0.2,1.1);
+              }
+              @keyframes chat-minimize {
+                0% { opacity: 1; transform: translateY(0) scale(1); }
+                80% { opacity: 0.7; transform: translateY(40px) scale(0.85); }
+                100% { opacity: 0; transform: translateY(60px) scale(0.92); }
+              }
+              .animate-chat-minimize {
+                animation: chat-minimize 0.5s cubic-bezier(0.4,0.2,0.2,1.1);
+              }
+            `}</style>
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-orange-500/90 to-orange-600/90 backdrop-blur-sm rounded-t-2xl">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <div className="w-10 h-10 rounded-full border-2 border-white/80 bg-orange-100 flex items-center justify-center">
+                    <img 
+                      src={AVATAR_URL} 
+                      alt="Astro-Ratan" 
+                      className="w-full h-full rounded-full object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        const parent = target.parentElement;
+                        if (parent) {
+                          parent.innerHTML = `
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="12" cy="12" r="10" fill="#f97316"/>
+                              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="white"/>
+                            </svg>
+                          `;
+                        }
+                      }}
+                    />
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                </div>
+                <div>
+                  <span className="text-white font-bold text-lg">Astro-Ratan</span>
+                  <p className="text-white/80 text-xs">Cosmic Assistant</p>
+                </div>
+              </div>
+              <button
+                onClick={handleToggle}
+                className="text-white/80 hover:text-white hover:bg-white/20 rounded-full p-2 transition-all duration-200"
+                aria-label="Minimize Astro-Ratan"
+              >
+                <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" strokeWidth="2" strokeLinecap="round" d="M6 6l12 12M6 18L18 6"/>
+                </svg>
+              </button>
             </div>
-            <button
-              onClick={() => setOpen(false)}
-              className="text-white hover:bg-orange-600 rounded-full p-1 transition-colors"
-              aria-label="Close chatbot"
-            >
-              <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" strokeWidth="2" strokeLinecap="round" d="M6 6l12 12M6 18L18 6"/></svg>
-            </button>
-          </div>
+            
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto px-4 py-3 bg-orange-50" style={{ maxHeight: 350 }}>
+            <div className="flex-1 overflow-y-auto px-6 py-4 bg-gradient-to-b from-orange-50/60 to-white/60">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
-                className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} mb-2`}
+                  className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} mb-4 animate-fade-in`}
               >
                 {msg.sender === 'bot' && (
-                  <img src={AVATAR_URL} alt="Bot" className="w-7 h-7 rounded-full mr-2 border border-orange-300" />
+                    <div className="w-8 h-8 rounded-full mr-3 border border-orange-300/50 bg-orange-100 flex items-center justify-center">
+                      <img 
+                        src={AVATAR_URL} 
+                        alt="Astro-Ratan" 
+                        className="w-full h-full rounded-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const parent = target.parentElement;
+                          if (parent) {
+                            parent.innerHTML = `
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="10" fill="#f97316"/>
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="white"/>
+                              </svg>
+                            `;
+                          }
+                        }}
+                      />
+                    </div>
                 )}
-                <span
-                  className={`px-4 py-2 rounded-2xl text-sm max-w-[80%] whitespace-pre-line ${
+                  <div
+                    className={`px-4 py-3 rounded-2xl max-w-[80%] shadow-sm backdrop-blur-sm ${
                     msg.sender === 'user'
-                      ? 'bg-white text-gray-900 border border-orange-200'
-                      : 'bg-orange-100 text-orange-900 border border-orange-300'
+                        ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white'
+                        : 'bg-white/80 text-gray-800 border border-orange-200/50'
                   }`}
                 >
-                  {msg.text}
-                </span>
+                    <span className="whitespace-pre-line text-sm md:text-base">{msg.text}</span>
+                  </div>
                 {msg.sender === 'user' && (
-                  <span className="ml-2 w-7 h-7" />
+                    <span className="ml-3 w-8 h-8" />
                 )}
               </div>
             ))}
             {loading && (
-              <div className="flex justify-start mb-2">
-                <img src={AVATAR_URL} alt="Bot" className="w-7 h-7 rounded-full mr-2 border border-orange-300" />
-                <span className="px-4 py-2 rounded-2xl text-sm bg-orange-100 text-orange-900 border border-orange-300 animate-pulse">Bot is typing...</span>
+                <div className="flex justify-start mb-4 animate-fade-in">
+                  <div className="w-8 h-8 rounded-full mr-3 border border-orange-300/50 bg-orange-100 flex items-center justify-center">
+                    <img 
+                      src={AVATAR_URL} 
+                      alt="Astro-Ratan" 
+                      className="w-full h-full rounded-full object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        const parent = target.parentElement;
+                        if (parent) {
+                          parent.innerHTML = `
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="12" cy="12" r="10" fill="#f97316"/>
+                              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="white"/>
+                            </svg>
+                          `;
+                        }
+                      }}
+                    />
+                  </div>
+                  <div className="bg-white/80 text-gray-800 border border-orange-200/50 px-4 py-3 rounded-2xl shadow-sm backdrop-blur-sm">
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                      <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                    </div>
+                  </div>
               </div>
             )}
+              
             {/* Slot selection buttons for askSlot step */}
             {bookingStep === 'askSlot' && availableSlots.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-2 justify-center">
+                <div className="flex flex-wrap gap-2 mb-4 justify-center">
                 {availableSlots.map((slot) => (
                   <button
                     key={slot}
                     type="button"
-                    className="px-3 py-1 rounded-full bg-orange-100 text-orange-900 border border-orange-300 hover:bg-orange-200 transition-colors text-sm font-semibold shadow-sm"
+                      className="px-4 py-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 text-white border border-orange-300/50 hover:from-orange-600 hover:to-orange-700 transition-all duration-200 text-sm font-semibold shadow-sm backdrop-blur-sm"
                     onClick={() => {
                       setInput(slot);
                       setTimeout(() => {
@@ -586,22 +724,23 @@ const Chatbot: React.FC = () => {
                 ))}
               </div>
             )}
+              
             {/* DOB picker for askDob step */}
             {bookingStep === 'askDob' && (
-              <div className="flex flex-col items-center mb-2">
+                <div className="flex flex-col items-center mb-4">
                 <DatePicker
                   selected={dob}
                   onChange={(date: Date | null) => setDob(date)}
                   maxDate={new Date()}
                   dateFormat="yyyy-MM-dd"
                   placeholderText="Select your date of birth"
-                  className="px-3 py-2 rounded-lg border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm bg-orange-50 w-full"
+                    className="px-4 py-3 rounded-lg border border-orange-200/50 focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm bg-white/80 backdrop-blur-sm w-full"
                   showYearDropdown
                   showMonthDropdown
                   dropdownMode="select"
                 />
                 <button
-                  className="mt-2 px-4 py-1 bg-orange-500 text-white rounded-full text-sm font-semibold hover:bg-orange-600 transition-colors"
+                    className="mt-3 px-6 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full text-sm font-semibold hover:from-orange-600 hover:to-orange-700 transition-all duration-200"
                   disabled={!dob}
                   onClick={() => {
                     if (dob) {
@@ -618,41 +757,58 @@ const Chatbot: React.FC = () => {
             )}
             <div ref={messagesEndRef} />
           </div>
-          {/* Input */}
-          <div className="flex flex-col gap-2 px-4 py-3 border-t border-orange-200 bg-white rounded-b-2xl">
-            {/* Calendar picker for date selection */}
-            {bookingStep === 'askDate' && (
-              <div className="flex justify-center mb-1">
-                <DatePicker
-                  selected={selectedDate}
-                  onChange={(date: Date | null) => setSelectedDate(date)}
-                  minDate={new Date()}
-                  dateFormat="yyyy-MM-dd"
-                  placeholderText="Select a date"
-                  className="w-full px-4 py-2 rounded-lg border border-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-400 text-base bg-white shadow-sm transition-all duration-200"
-                  popperClassName="z-[1100]"
-                  showPopperArrow={true}
-                  calendarClassName="rounded-xl border border-orange-200 shadow-lg bg-white"
-                />
+            
+            {/* Input Area */}
+            <div className="px-6 py-4 bg-white/90 border-t border-orange-200/50 flex items-center gap-3 rounded-b-2xl">
+              {/* Bot avatar with floating and hover effect */}
+              <div className="relative group">
+                <div className="w-10 h-10 rounded-full bg-white/70 border border-orange-200/60 shadow-lg flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:shadow-orange-300/60 animate-float-bot cursor-pointer">
+                  <img 
+                    src={AVATAR_URL} 
+                    alt="Astro-Ratan" 
+                    className="w-8 h-8 rounded-full object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      const parent = target.parentElement;
+                      if (parent) {
+                        parent.innerHTML = `
+                          <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                            <circle cx='12' cy='12' r='10' fill='#f97316'/>
+                            <path d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z' fill='white'/>
+                          </svg>
+                        `;
+                      }
+                    }}
+                  />
+                </div>
+                {/* Floating animation keyframes */}
+                <style>{`
+                  @keyframes float-bot {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(-8px); }
+                  }
+                  .animate-float-bot { animation: float-bot 2.5s ease-in-out infinite; }
+                `}</style>
               </div>
-            )}
-            <div className="flex items-center gap-2">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && !loading && sendMessage()}
-                placeholder="Type your message..."
-                className="flex-1 px-4 py-2 rounded-full border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm bg-orange-50"
+                placeholder="Ask me anything..."
+                className="flex-1 px-4 py-3 rounded-full border border-orange-200/50 focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm md:text-base bg-white/80 backdrop-blur-sm"
                 disabled={loading}
               />
               <button
                 onClick={sendMessage}
                 disabled={loading || !input.trim()}
-                className="bg-orange-500 hover:bg-orange-600 text-white rounded-full p-2 transition-all duration-200 focus:outline-none disabled:opacity-50"
+                className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-full p-3 transition-all duration-200 focus:outline-none disabled:opacity-50 shadow-sm"
                 aria-label="Send message"
               >
-                <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M3 12l18-7-7 18-2.5-7L3 12z" fill="currentColor"/></svg>
+                <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
+                  <path d="M3 12l18-7-7 18-2.5-7L3 12z" fill="currentColor"/>
+                </svg>
               </button>
             </div>
           </div>
