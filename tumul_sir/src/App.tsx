@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import ParticleBackground from "@/components/ParticleBackground";
 import Chatbot from "@/components/Chatbot";
 
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/services" element={<Services />} />
           <Route path="/knowmore" element={<KnowMore />} />
+
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

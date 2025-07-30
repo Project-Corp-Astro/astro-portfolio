@@ -262,15 +262,27 @@ const ContactForm = () => {
 
   return (
     <>
-      <div className="flex justify-center mb-6">
+      <div className="flex justify-center gap-4 mb-8">
         <button
-          className={`px-6 py-2 rounded-t-lg font-semibold border-b-2 transition-colors duration-200 ${activeTab === 'book' ? 'border-orange-500 text-orange-700 bg-orange-50' : 'border-transparent text-gray-500 bg-white'}`}
+          className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-md hover:shadow-lg ${
+            activeTab === 'book' 
+              ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-blue-200' 
+              : 'bg-white text-gray-600 border-2 border-gray-200 hover:border-blue-300 hover:text-blue-600'
+          }`}
           onClick={() => setActiveTab('book')}
-        >Book Session</button>
+        >
+          📅 Book Session
+        </button>
         <button
-          className={`px-6 py-2 rounded-t-lg font-semibold border-b-2 transition-colors duration-200 ${activeTab === 'manage' ? 'border-orange-500 text-orange-700 bg-orange-50' : 'border-transparent text-gray-500 bg-white'}`}
+          className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-md hover:shadow-lg ${
+            activeTab === 'manage' 
+              ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-blue-200' 
+              : 'bg-white text-gray-600 border-2 border-gray-200 hover:border-blue-300 hover:text-blue-600'
+          }`}
           onClick={() => setActiveTab('manage')}
-        >Manage Booking</button>
+        >
+          ⚙️ Manage Booking
+        </button>
       </div>
       {activeTab === 'book' && (
         <form onSubmit={handleSubmit} className="space-y-6">

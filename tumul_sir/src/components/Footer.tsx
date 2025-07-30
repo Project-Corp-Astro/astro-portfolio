@@ -3,10 +3,12 @@ import { Link } from "react-router-dom";
 import TermsViewModal from "./TermsViewModal";
 import { useState } from "react";
 import RefundPolicyViewModal from "./RefundPolicyViewModal";
+import PrivacyPolicyModal from "./PrivacyPolicyModal";
 
 const Footer = () => {
   const [showTerms, setShowTerms] = useState(false);
   const [showRefund, setShowRefund] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
   return (
     <footer className="bg-cosmic-brown text-foreground py-8 md:py-12">
       <div className="container mx-auto px-4 md:px-6">
@@ -60,6 +62,15 @@ const Footer = () => {
                   Refund Policy
                 </button>
               </li>
+              <li>
+                <button
+                  className="hover:text-orange transition-colors underline bg-transparent border-none p-0 cursor-pointer text-center md:text-left"
+                  onClick={() => setShowPrivacy(true)}
+                  type="button"
+                >
+                  Privacy Policy
+                </button>
+              </li>
             </ul>
           </div>
         </div>
@@ -75,6 +86,10 @@ const Footer = () => {
       <RefundPolicyViewModal
         open={showRefund}
         onClose={() => setShowRefund(false)}
+      />
+      <PrivacyPolicyModal
+        open={showPrivacy}
+        onClose={() => setShowPrivacy(false)}
       />
     </footer>
   );

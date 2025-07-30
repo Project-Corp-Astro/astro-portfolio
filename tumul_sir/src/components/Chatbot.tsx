@@ -4,7 +4,7 @@ const API_BASE = import.meta.env.VITE_API_BASE;
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-const AVATAR_URL = "/Dr.-Tumul-Raathi-astrology.png"; // Use your logo or avatar
+const AVATAR_URL = "/bot.png"; // Use the new chatbot icon
 
 // Booking steps
 const BOOKING_STEPS = {
@@ -33,13 +33,61 @@ interface BookingData {
   dob?: string;
 }
 
+// Enhanced service definitions with pricing and descriptions
 const SERVICES = [
-  'Business Astrology',
-  'Personal Astrology',
-  'Numerology',
-  'Vaastu',
-  'Signature Analysis',
+  {
+    id: 'business-astrology',
+    name: 'Business Astrology',
+    description: 'Strategic guidance for companies and entrepreneurs',
+    price: 2500,
+    duration: '60 minutes',
+    addons: ['numerology', 'vaastu']
+  },
+  {
+    id: 'personal-astrology',
+    name: 'Personal Astrology',
+    description: 'Life advice, relationships, and personal growth',
+    price: 1500,
+    duration: '45 minutes',
+    addons: ['numerology', 'signature-analysis']
+  },
+  {
+    id: 'numerology',
+    name: 'Numerology',
+    description: 'Insights based on numbers and names',
+    price: 1200,
+    duration: '30 minutes',
+    addons: ['personal-astrology', 'business-astrology']
+  },
+  {
+    id: 'vaastu',
+    name: 'Vaastu',
+    description: 'Space and energy alignment for homes and offices',
+    price: 2000,
+    duration: '45 minutes',
+    addons: ['business-astrology']
+  },
+  {
+    id: 'signature-analysis',
+    name: 'Signature Analysis',
+    description: 'Personality and authenticity insights',
+    price: 800,
+    duration: '20 minutes',
+    addons: ['personal-astrology', 'business-astrology']
+  },
 ];
+
+// Context tracking for better conversations
+interface ConversationContext {
+  userGoals?: string[];
+  businessType?: string;
+  previousServices?: string[];
+  budget?: string;
+  urgency?: string;
+  preferredLanguage?: string;
+  lastIntent?: string;
+  followUpQuestions?: string[];
+}
 
 const Chatbot: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -57,15 +105,128 @@ const Chatbot: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [dob, setDob] = useState<Date | null>(null);
 
+  // Enhanced context tracking
+  const [conversationContext, setConversationContext] = useState<ConversationContext>({});
+  const [currentService, setCurrentService] = useState<any>(null);
+  const [suggestedAddons, setSuggestedAddons] = useState<any[]>([]);
+  const [showPayment, setShowPayment] = useState(false);
+  const [paymentAmount, setPaymentAmount] = useState(0);
+
   // Lead qualification steps
   const [leadStep, setLeadStep] = useState<'idle' | 'askConsent' | 'askPhone' | 'askBusinessType' | 'askLanguage' | 'askClientType' | 'askHadSession' | 'done'>('idle');
   const [leadData, setLeadData] = useState<{ phone?: string; businessType?: string; language?: string; clientType?: string; hadSession?: string }>({});
+
+
 
   useEffect(() => {
     if (open && messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages, open]);
+
+  // Enhanced intent detection
+  const detectIntent = (text: string) => {
+    const lowerText = text.toLowerCase();
+    
+    // Booking intent
+    if (/\b(book|appointment|consultation|schedule|meeting|slot|reserve)\b/.test(lowerText)) {
+      return 'booking';
+    }
+    
+    // Pricing intent
+    if (/\b(price|cost|fee|how much|rate|charges)\b/.test(lowerText)) {
+      return 'pricing';
+    }
+    
+    // Service inquiry
+    if (/\b(service|help|what do you|offer|provide)\b/.test(lowerText)) {
+      return 'service_inquiry';
+    }
+    
+    // Business vs Personal
+    if (/\b(business|company|entrepreneur|startup|corporate)\b/.test(lowerText)) {
+      return 'business_focus';
+    }
+    
+    if (/\b(personal|life|relationship|family|individual)\b/.test(lowerText)) {
+      return 'personal_focus';
+    }
+    
+    // Urgency
+    if (/\b(urgent|asap|quick|immediate|emergency)\b/.test(lowerText)) {
+      return 'urgency';
+    }
+    
+    // Follow-up questions
+    if (/\b(what about|how about|also|additionally|more)\b/.test(lowerText)) {
+      return 'follow_up';
+    }
+    
+    return 'general';
+  };
+
+  // Dynamic service recommendation based on context
+  const recommendServices = (context: ConversationContext) => {
+    let recommendations = [...SERVICES];
+    
+    if (context.userGoals?.includes('business')) {
+      recommendations = recommendations.filter(s => s.id.includes('business') || s.id === 'vaastu');
+    }
+    
+    if (context.userGoals?.includes('personal')) {
+      recommendations = recommendations.filter(s => s.id.includes('personal') || s.id === 'numerology' || s.id === 'signature-analysis');
+    }
+    
+    if (context.budget === 'low') {
+      recommendations = recommendations.filter(s => s.price <= 1200);
+    }
+    
+    if (context.urgency === 'high') {
+      recommendations = recommendations.filter(s => s.duration <= '30 minutes');
+    }
+    
+    return recommendations;
+  };
+
+  // Enhanced response generation
+  const generateContextualResponse = (intent: string, userInput: string, context: ConversationContext) => {
+    switch (intent) {
+      case 'pricing':
+        if (currentService) {
+          return `The ${currentService.name} consultation costs ₹${currentService.price} for ${currentService.duration}. Would you like to book this service?`;
+        }
+        return "I offer various services at different price points:\n" + 
+               SERVICES.map(s => `• ${s.name}: ₹${s.price} (${s.duration})`).join('\n') +
+               "\n\nWhich service interests you? I can provide more details and help you book.";
+      
+      case 'business_focus':
+        setConversationContext(prev => ({ ...prev, userGoals: [...(prev.userGoals || []), 'business'] }));
+        return "Great! For business guidance, I recommend:\n" +
+               "• Business Astrology (₹2500) - Strategic insights for companies\n" +
+               "• Vaastu (₹2000) - Office space optimization\n" +
+               "• Numerology (₹1200) - Business name analysis\n\n" +
+               "What specific business challenge are you facing?";
+      
+      case 'personal_focus':
+        setConversationContext(prev => ({ ...prev, userGoals: [...(prev.userGoals || []), 'personal'] }));
+        return "Perfect! For personal guidance, I recommend:\n" +
+               "• Personal Astrology (₹1500) - Life and relationship advice\n" +
+               "• Numerology (₹1200) - Personal number insights\n" +
+               "• Signature Analysis (₹800) - Personality assessment\n\n" +
+               "What area of your personal life would you like guidance on?";
+      
+      case 'follow_up':
+        if (currentService && suggestedAddons.length > 0) {
+          return `Great question! For ${currentService.name}, I also recommend:\n` +
+                 suggestedAddons.map(addon => `• ${addon.name} (₹${addon.price}) - ${addon.description}`).join('\n') +
+                 "\nWould you like to add any of these services to your consultation?";
+        }
+        return "I'd be happy to help! Could you please clarify what specific information you're looking for?";
+      
+      default:
+        return null; // Let AI handle general responses
+    }
+  };
 
   // Detect booking intent
   const isBookingIntent = (text: string) => {
@@ -77,9 +238,21 @@ const Chatbot: React.FC = () => {
 
   const sendMessage = async () => {
     if (!input.trim()) return;
+    
     const userMessage: ChatMessage = { sender: 'user', text: input };
     setMessages([...messages, userMessage]);
     setInput('');
+
+
+
+    // Enhanced intent detection and context handling
+    const intent = detectIntent(input);
+    const contextualResponse = generateContextualResponse(intent, input, conversationContext);
+    
+    if (contextualResponse) {
+      setMessages(prev => [...prev, { sender: 'bot', text: contextualResponse }]);
+      return;
+    }
 
     // If user asks about cancel or reschedule, prompt to use Contact Form
     if (/\b(cancel|reschedule)\b/i.test(input)) {
@@ -90,42 +263,65 @@ const Chatbot: React.FC = () => {
       return;
     }
 
-    // Booking flow: detect intent and start booking
+    // Enhanced booking flow with context awareness
     if (bookingStep === 'idle' && isBookingIntent(input)) {
       setBookingStep('askService');
       setLoading(true);
+      
+      // Use context to suggest relevant services
+      const recommendations = recommendServices(conversationContext);
+      const serviceList = recommendations.map((s, i) => `${i + 1}. ${s.name} - ₹${s.price}`).join('\n');
+      
       setTimeout(() => {
         setMessages(prev => [
           ...prev,
-          { sender: 'bot', text: `Which service would you like to book?\n${SERVICES.map((s, i) => `${i + 1}. ${s}`).join('\n')}\nPlease type the service name or number.` }
+          { sender: 'bot', text: `Based on our conversation, here are the services I recommend:\n${serviceList}\n\nPlease type the service name or number to proceed with booking.` }
         ]);
         setLoading(false);
       }, 600);
       return;
     }
 
-    // Booking flow: handle service selection
+    // Booking flow: handle service selection with enhanced validation
     if (bookingStep === 'askService') {
       if (input.trim().toLowerCase() === 'back') {
         setMessages(prev => [...prev, { sender: 'bot', text: 'You are at the first step. Please select a service.' }]);
         return;
       }
-      let selectedService = '';
+      
+      let selectedService = null;
       const idx = Number(input.trim()) - 1;
+      
       if (!isNaN(idx) && idx >= 0 && idx < SERVICES.length) {
         selectedService = SERVICES[idx];
-      } else if (SERVICES.map(s => s.toLowerCase()).includes(input.trim().toLowerCase())) {
-        selectedService = SERVICES.find(s => s.toLowerCase() === input.trim().toLowerCase()) || '';
+      } else {
+        const serviceName = input.trim().toLowerCase();
+        selectedService = SERVICES.find(s => s.name.toLowerCase().includes(serviceName) || s.id.includes(serviceName));
       }
+      
       if (!selectedService) {
         setMessages(prev => [...prev, { sender: 'bot', text: 'Please select a valid service by typing its name or number.' }]);
         return;
       }
-      setBookingData(prev => ({ ...prev, service: selectedService }));
+      
+      setCurrentService(selectedService);
+      setBookingData(prev => ({ ...prev, service: selectedService.name }));
+      
+      // Suggest add-ons
+      const addons = SERVICES.filter(s => selectedService.addons.includes(s.id));
+      setSuggestedAddons(addons);
+      
       setBookingStep('askDate');
       setLoading(true);
+      
       setTimeout(() => {
-        setMessages(prev => [...prev, { sender: 'bot', text: 'Great! What date would you like to book your appointment for? (YYYY-MM-DD)' }]);
+        let response = `Great choice! ${selectedService.name} (₹${selectedService.price}) for ${selectedService.duration}.\n\nWhat date would you like to book your appointment for? (YYYY-MM-DD)`;
+        
+        if (addons.length > 0) {
+          response += `\n\n💡 Tip: You might also benefit from:\n${addons.map(a => `• ${a.name} (₹${a.price})`).join('\n')}`;
+        }
+        
+        setMessages(prev => [...prev, { sender: 'bot', text: response }]);
         setLoading(false);
       }, 600);
       return;
@@ -135,7 +331,7 @@ const Chatbot: React.FC = () => {
     if (bookingStep === 'askDate') {
       if (input.trim().toLowerCase() === 'back') {
         setBookingStep('askService');
-        setMessages(prev => [...prev, { sender: 'bot', text: `Going back. Which service would you like to book?\n${SERVICES.map((s, i) => `${i + 1}. ${s}`).join('\n')}\nPlease type the service name or number.` }]);
+        setMessages(prev => [...prev, { sender: 'bot', text: `Going back. Which service would you like to book?\n${SERVICES.map((s, i) => `${i + 1}. ${s.name} - ₹${s.price}`).join('\n')}\nPlease type the service name or number.` }]);
         return;
       }
       // Validate date format YYYY-MM-DD
@@ -313,7 +509,7 @@ const Chatbot: React.FC = () => {
         const field = editMatch[1];
         if (field === 'service') {
           setBookingStep('askService');
-          setMessages(prev => [...prev, { sender: 'bot', text: `Editing service. Which service would you like to book?\n${SERVICES.map((s, i) => `${i + 1}. ${s}`).join('\n')}\nPlease type the service name or number.` }]);
+          setMessages(prev => [...prev, { sender: 'bot', text: `Editing service. Which service would you like to book?\n${SERVICES.map((s, i) => `${i + 1}. ${s.name} - ₹${s.price}`).join('\n')}\nPlease type the service name or number.` }]);
         } else if (field === 'date') {
           setBookingStep('askDate');
           setMessages(prev => [...prev, { sender: 'bot', text: 'Editing date. What date would you like to book your appointment for? (YYYY-MM-DD)' }]);
@@ -362,18 +558,29 @@ const Chatbot: React.FC = () => {
           const data = await res.json();
           if (res.ok) {
             let confirmationText = `Thank you, ${bookingData.fullName}! Your appointment is booked for ${bookingData.date} at ${bookingData.slot} (${bookingData.service}).\nContact: ${bookingData.phone}\nCompany: ${bookingData.company || 'N/A'}\nYour Consultation ID is: ${data.bookingId}\nYou will receive a confirmation email shortly.`;
+            
             if (data.bookingId) {
               confirmationText += `\n\nYour ASTRO-ID: ${data.bookingId}`;
             }
             if (data.calendarLink) {
               confirmationText += `\n\nAdd to your calendar: ${data.calendarLink}`;
             }
+            
+            // Add payment information if service has a price
+            if (currentService && currentService.price > 0) {
+              confirmationText += `\n\n💰 Payment: ₹${currentService.price} for ${currentService.duration}`;
+              setPaymentAmount(currentService.price);
+              setShowPayment(true);
+            }
+            
             setMessages(prev => [
               ...prev,
               { sender: 'bot', text: confirmationText }
             ]);
+            
             // Store bookingId for lead update
             if (data.bookingId) setBookingId(data.bookingId);
+            
             // Start lead qualification
             setLeadStep('askConsent');
             setTimeout(() => {
@@ -476,16 +683,25 @@ const Chatbot: React.FC = () => {
       }
     }
 
-    // Default: normal chat
-    setLoading(true);
-    try {
-      const botReply = await sendChatMessage(messages, input);
-      const botMessage: ChatMessage = { sender: 'bot', text: botReply };
-      setMessages((prev) => [...prev, botMessage]);
-    } catch (error) {
-      setMessages((prev) => [...prev, { sender: 'bot', text: 'Sorry, something went wrong.' }]);
-    }
-    setLoading(false);
+      // Default: normal chat with enhanced context
+  setLoading(true);
+  try {
+    // Update conversation context with current intent
+    setConversationContext(prev => ({
+      ...prev,
+      lastIntent: intent,
+      followUpQuestions: [...(prev.followUpQuestions || []), input]
+    }));
+
+    const botReply = await sendChatMessage(messages, input);
+    const botMessage: ChatMessage = { sender: 'bot', text: botReply };
+    setMessages((prev) => [...prev, botMessage]);
+    
+
+  } catch (error) {
+    setMessages((prev) => [...prev, { sender: 'bot', text: 'Sorry, something went wrong. Would you like to talk to a human specialist?' }]);
+  }
+  setLoading(false);
   };
 
   // When a date is picked from the calendar, auto-fill input and send
@@ -534,23 +750,99 @@ const Chatbot: React.FC = () => {
     }, 350); // match fade-out duration
   };
 
+  // Payment handling
+  const handlePayment = async () => {
+    try {
+      // In a real implementation, this would integrate with Stripe/Razorpay
+      const response = await fetch(`${API_BASE}/api/create-payment`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: paymentAmount,
+          bookingId: bookingId,
+          service: currentService?.name,
+          customerEmail: bookingData.email,
+          customerName: bookingData.fullName
+        })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setMessages(prev => [
+          ...prev,
+          { sender: 'bot', text: `Payment link generated! Please complete your payment to confirm your booking.\n\nPayment Link: ${data.paymentUrl}\n\nAmount: ₹${paymentAmount}` }
+        ]);
+        setShowPayment(false);
+      } else {
+        setMessages(prev => [
+          ...prev,
+          { sender: 'bot', text: 'Payment processing is temporarily unavailable. Please contact us directly to complete your booking.' }
+        ]);
+      }
+    } catch (error) {
+      setMessages(prev => [
+        ...prev,
+        { sender: 'bot', text: 'Payment processing error. Please contact us directly to complete your booking.' }
+      ]);
+    }
+  };
+
+  // Feedback collection
+  const handleFeedback = (rating: number) => {
+    setMessages(prev => [
+      ...prev,
+      { sender: 'bot', text: `Thank you for your feedback! ${rating >= 4 ? 'We\'re glad we could help!' : 'We\'ll work to improve our service.'}` }
+    ]);
+  };
+
+  // Human handoff
+  const handleHumanHandoff = () => {
+    setMessages(prev => [
+      ...prev,
+      { sender: 'bot', text: "I'm connecting you to a human specialist. Please wait a moment..." }
+    ]);
+    
+    // In a real implementation, this would trigger a notification to human agents
+    setTimeout(() => {
+      setMessages(prev => [
+        ...prev,
+        { sender: 'bot', text: "A specialist will be with you shortly. In the meantime, you can also reach us at:\n📞 Phone: +91-XXXXXXXXXX\n📧 Email: info@tumulraathi.com\n\nOr use our contact form below." }
+      ]);
+    }, 2000);
+  };
+
+
+
   return (
     <>
       {/* Floating Chatbot Button - always visible */}
       <div className="fixed bottom-8 right-8 z-[1000]">
         <button
           onClick={handleToggle}
-          className={`bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-2xl focus:outline-none border-4 border-white/20 backdrop-blur-sm transition-all duration-300
-            hover:scale-110 hover:shadow-[0_0_32px_0_rgba(251,146,60,0.5)] hover:ring-4 hover:ring-orange-300/40
-            ${open || isAnimating ? 'ring-4 ring-orange-300/40 pointer-events-none opacity-80' : ''}`}
+          className={`w-16 h-16 flex items-center justify-center transition-all duration-300 hover:scale-110 focus:outline-none
+            ${open || isAnimating ? 'pointer-events-none opacity-80' : ''}`}
           aria-label="Toggle Astro-Ratan"
           disabled={isAnimating}
         >
-          {/* Astrology icon */}
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="10" fill="white" />
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#f97316"/>
-          </svg>
+          {/* Chatbot icon */}
+          <img 
+            src={AVATAR_URL} 
+            alt="Astro-Ratan" 
+            className="w-16 h-16 object-cover cursor-pointer"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              const parent = target.parentElement;
+              if (parent) {
+                parent.innerHTML = `
+                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" fill="white" />
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#f97316"/>
+                  </svg>
+                `;
+              }
+            }}
+          />
         </button>
       </div>
       
@@ -587,10 +879,10 @@ const Chatbot: React.FC = () => {
               }
             `}</style>
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-orange-500/90 to-orange-600/90 backdrop-blur-sm rounded-t-2xl">
+            <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-blue-500/90 to-blue-600/90 backdrop-blur-sm rounded-t-2xl">
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <div className="w-10 h-10 rounded-full border-2 border-white/80 bg-orange-100 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full border-2 border-white/80 bg-blue-100 flex items-center justify-center">
                     <img 
                       src={AVATAR_URL} 
                       alt="Astro-Ratan" 
@@ -629,14 +921,14 @@ const Chatbot: React.FC = () => {
             </div>
             
           {/* Messages */}
-            <div className="flex-1 overflow-y-auto px-6 py-4 bg-gradient-to-b from-orange-50/60 to-white/60">
+            <div className="flex-1 overflow-y-auto px-6 py-4 bg-gradient-to-b from-blue-50/60 to-white/60">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
                   className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} mb-4 animate-fade-in`}
               >
                 {msg.sender === 'bot' && (
-                    <div className="w-8 h-8 rounded-full mr-3 border border-orange-300/50 bg-orange-100 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-full mr-3 border border-blue-300/50 bg-blue-100 flex items-center justify-center">
                       <img 
                         src={AVATAR_URL} 
                         alt="Astro-Ratan" 
@@ -660,8 +952,8 @@ const Chatbot: React.FC = () => {
                   <div
                     className={`px-4 py-3 rounded-2xl max-w-[80%] shadow-sm backdrop-blur-sm ${
                     msg.sender === 'user'
-                        ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white'
-                        : 'bg-white/80 text-gray-800 border border-orange-200/50'
+                        ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
+                        : 'bg-white/80 text-gray-800 border border-blue-200/50'
                   }`}
                 >
                     <span className="whitespace-pre-line text-sm md:text-base">{msg.text}</span>
@@ -673,7 +965,7 @@ const Chatbot: React.FC = () => {
             ))}
             {loading && (
                 <div className="flex justify-start mb-4 animate-fade-in">
-                  <div className="w-8 h-8 rounded-full mr-3 border border-orange-300/50 bg-orange-100 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full mr-3 border border-blue-300/50 bg-blue-100 flex items-center justify-center">
                     <img 
                       src={AVATAR_URL} 
                       alt="Astro-Ratan" 
@@ -693,16 +985,49 @@ const Chatbot: React.FC = () => {
                       }}
                     />
                   </div>
-                  <div className="bg-white/80 text-gray-800 border border-orange-200/50 px-4 py-3 rounded-2xl shadow-sm backdrop-blur-sm">
-                    <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                      <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                    </div>
+                  <div className="bg-white/80 text-gray-800 border border-blue-200/50 px-4 py-3 rounded-2xl shadow-sm backdrop-blur-sm">
+                                          <div className="flex space-x-1">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                      </div>
                   </div>
               </div>
             )}
               
+            {/* Date picker for askDate step */}
+            {bookingStep === 'askDate' && (
+              <div className="flex flex-col items-center mb-4">
+                <DatePicker
+                  selected={selectedDate}
+                  onChange={(date: Date | null) => setSelectedDate(date)}
+                  minDate={new Date()}
+                  dateFormat="yyyy-MM-dd"
+                  placeholderText="Select appointment date"
+                  className="px-4 py-3 rounded-lg border border-orange-200/50 focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm bg-white/80 backdrop-blur-sm w-full"
+                  showYearDropdown
+                  showMonthDropdown
+                  dropdownMode="select"
+                />
+                <button
+                  className="mt-3 px-6 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full text-sm font-semibold hover:from-orange-600 hover:to-orange-700 transition-all duration-200"
+                  disabled={!selectedDate}
+                  onClick={() => {
+                    if (selectedDate) {
+                      const pad = (n: number) => n.toString().padStart(2, '0');
+                      const localDate = `${selectedDate.getFullYear()}-${pad(selectedDate.getMonth() + 1)}-${pad(selectedDate.getDate())}`;
+                      setInput(localDate);
+                      setTimeout(() => {
+                        sendMessage();
+                      }, 100);
+                    }
+                  }}
+                >
+                  Confirm Date
+                </button>
+              </div>
+            )}
+
             {/* Slot selection buttons for askSlot step */}
             {bookingStep === 'askSlot' && availableSlots.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-4 justify-center">
@@ -710,7 +1035,7 @@ const Chatbot: React.FC = () => {
                   <button
                     key={slot}
                     type="button"
-                      className="px-4 py-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 text-white border border-orange-300/50 hover:from-orange-600 hover:to-orange-700 transition-all duration-200 text-sm font-semibold shadow-sm backdrop-blur-sm"
+                      className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 text-white border border-blue-300/50 hover:from-blue-600 hover:to-blue-700 transition-all duration-200 text-sm font-semibold shadow-sm backdrop-blur-sm"
                     onClick={() => {
                       setInput(slot);
                       setTimeout(() => {
@@ -755,14 +1080,51 @@ const Chatbot: React.FC = () => {
                 </button>
               </div>
             )}
+
+            {/* Payment Section */}
+            {showPayment && (
+              <div className="flex flex-col items-center mb-4 p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-200">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">Complete Your Payment</h3>
+                <p className="text-sm text-gray-600 mb-3">Amount: ₹{paymentAmount}</p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handlePayment}
+                    className="px-6 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full text-sm font-semibold hover:from-green-600 hover:to-green-700 transition-all duration-200"
+                  >
+                    💳 Pay Now
+                  </button>
+                  <button
+                    onClick={() => setShowPayment(false)}
+                    className="px-6 py-2 bg-gray-500 text-white rounded-full text-sm font-semibold hover:bg-gray-600 transition-all duration-200"
+                  >
+                    Later
+                  </button>
+                </div>
+              </div>
+            )}
+
+
+
+            {/* Human Handoff Button */}
+            {messages.length > 3 && (
+              <div className="flex justify-center mb-4">
+                <button
+                  onClick={handleHumanHandoff}
+                  className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full text-sm font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-200 flex items-center gap-2"
+                >
+                  👨‍💼 Talk to Human
+                </button>
+              </div>
+            )}
+
             <div ref={messagesEndRef} />
           </div>
             
             {/* Input Area */}
-            <div className="px-6 py-4 bg-white/90 border-t border-orange-200/50 flex items-center gap-3 rounded-b-2xl">
+            <div className="px-6 py-4 bg-white/90 border-t border-blue-200/50 flex items-center gap-3 rounded-b-2xl">
               {/* Bot avatar with floating and hover effect */}
               <div className="relative group">
-                <div className="w-10 h-10 rounded-full bg-white/70 border border-orange-200/60 shadow-lg flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:shadow-orange-300/60 animate-float-bot cursor-pointer">
+                <div className="w-10 h-10 rounded-full bg-white/70 border border-blue-200/60 shadow-lg flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:shadow-blue-300/60 animate-float-bot cursor-pointer">
                   <img 
                     src={AVATAR_URL} 
                     alt="Astro-Ratan" 
@@ -791,19 +1153,19 @@ const Chatbot: React.FC = () => {
                   .animate-float-bot { animation: float-bot 2.5s ease-in-out infinite; }
                 `}</style>
               </div>
-              <input
+                              <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && !loading && sendMessage()}
                 placeholder="Ask me anything..."
-                className="flex-1 px-4 py-3 rounded-full border border-orange-200/50 focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm md:text-base bg-white/80 backdrop-blur-sm"
+                className="flex-1 px-4 py-3 rounded-full border border-blue-200/50 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm md:text-base bg-white/80 backdrop-blur-sm"
                 disabled={loading}
               />
               <button
                 onClick={sendMessage}
                 disabled={loading || !input.trim()}
-                className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-full p-3 transition-all duration-200 focus:outline-none disabled:opacity-50 shadow-sm"
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-full p-3 transition-all duration-200 focus:outline-none disabled:opacity-50 shadow-sm"
                 aria-label="Send message"
               >
                 <svg width="24" height="24" fill="none" viewBox="0 0 24 24">

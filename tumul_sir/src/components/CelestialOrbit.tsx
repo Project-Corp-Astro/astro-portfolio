@@ -10,12 +10,12 @@ const orbitIcons = [
 ];
 
 const orbitColors = [
-  '#FFD700', // Gold
-  '#A084E8', // Lavender
-  '#FF6F00', // Orange
-  '#7BB7FD', // Blue
-  '#FF69B4', // Pink
-  '#00FF00', // Green
+  '#FFE5B4', // Medium Gold
+  '#D8BFD8', // Medium Lavender
+  '#FFB366', // Medium Orange
+  '#87CEEB', // Sky Blue
+  '#FFB6C1', // Light Pink
+  '#98FB98', // Pale Green
 ];
 
 const CelestialOrbit = () => {
@@ -86,11 +86,12 @@ const CelestialOrbit = () => {
                 width: iconSize, 
                 height: iconSize, 
                 background: `linear-gradient(120deg, ${bgColor}cc 60%, ${bgColor}99 100%)`,
-                backdropFilter: 'blur(8px)',
-                WebkitBackdropFilter: 'blur(8px)',
-                boxShadow: `0 4px 16px ${bgColor}33`,
-                border: `2px solid ${bgColor}`,
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                boxShadow: `0 8px 32px ${bgColor}40, inset 0 1px 0 ${bgColor}80`,
+                border: `1px solid ${bgColor}80`,
                 overflow: 'hidden',
+                borderRadius: '50%',
               }}
             >
               {/* Glossy overlay */}
