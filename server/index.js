@@ -268,6 +268,64 @@ app.post("/api/chatbot", async (req, res) => {
   }
 });
 
+// Payment integration endpoint
+app.post("/api/create-payment", async (req, res) => {
+  try {
+    const { amount, bookingId, service, customerEmail, customerName } = req.body;
+    
+    if (!amount || !bookingId || !service) {
+      return res.status(400).json({ error: "Missing required payment details" });
+    }
+
+    // In a real implementation, this would integrate with Stripe/Razorpay
+    // For now, we'll create a mock payment link
+    const paymentUrl = `https://payment.example.com/pay?amount=${amount}&booking=${bookingId}&service=${encodeURIComponent(service)}`;
+    
+    // Update booking with payment status
+    await Contact.findOneAndUpdate(
+      { astroId: bookingId },
+      { 
+        paymentStatus: 'pending',
+        paymentAmount: amount,
+        paymentUrl: paymentUrl
+      }
+    );
+
+    res.json({ 
+      paymentUrl,
+      message: "Payment link generated successfully"
+    });
+  } catch (error) {
+    console.error('Payment creation error:', error);
+    res.status(500).json({ error: "Failed to create payment", details: error.message });
+  }
+});
+
+
+
+// Enhanced booking update endpoint with lead data
+app.patch("/api/bookings/:astroId", async (req, res) => {
+  try {
+    const { astroId } = req.params;
+    const updateData = req.body;
+    
+    const booking = await Contact.findOneAndUpdate(
+      { astroId: astroId },
+      updateData,
+      { new: true }
+    );
+    
+    if (!booking) {
+      return res.status(404).json({ error: "Booking not found" });
+    }
+    
+    res.json({ message: "Booking updated successfully", booking });
+  } catch (error) {
+    console.error('Booking update error:', error);
+    res.status(500).json({ error: "Failed to update booking", details: error.message });
+  }
+});
+
 // Endpoint to get all bookings (for admin purposes)
 app.get("/api/bookings", async (req, res) => {
   try {

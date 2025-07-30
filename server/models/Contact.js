@@ -48,6 +48,42 @@ const contactSchema = new mongoose.Schema({
     unique: true,
     sparse: true
   },
+  // Payment fields
+  paymentStatus: {
+    type: String,
+    enum: ['pending', 'paid', 'failed', 'refunded'],
+    default: 'pending'
+  },
+  paymentAmount: {
+    type: Number,
+    default: 0
+  },
+  paymentUrl: {
+    type: String
+  },
+  paymentId: {
+    type: String
+  },
+  // Lead qualification fields
+  businessType: {
+    type: String,
+    trim: true
+  },
+  preferredLanguage: {
+    type: String,
+    trim: true
+  },
+  clientType: {
+    type: String,
+    enum: ['new', 'returning'],
+    default: 'new'
+  },
+  hadSession: {
+    type: String,
+    enum: ['yes', 'no'],
+    default: 'no'
+  },
+
   createdAt: {
     type: Date,
     default: Date.now
