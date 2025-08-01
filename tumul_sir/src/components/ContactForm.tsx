@@ -5,6 +5,9 @@ import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button
 import TermsModal from "./TermsModal";
 import RefundPolicyModal from "./RefundPolicyModal";
 import { YellowMetallicButton } from "./ui/yellow-metallic-button";
+import { getServiceById, type Service } from "@/lib/services";
+import PaymentModal from "./PaymentModal";
+import PaymentInfoModal from "./PaymentInfoModal";
 
 const API_BASE = import.meta.env.VITE_API_BASE || "";
 
@@ -98,8 +101,14 @@ const ContactForm = () => {
     date: "",
     time: ""
   });
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [consultationId, setConsultationId] = useState<string | null>(null);
+  const [paymentInfo, setPaymentInfo] = useState<any>(null);
+  const [showPayment, setShowPayment] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showPaymentInfoModal, setShowPaymentInfoModal] = useState(false);
+  const [bookingData, setBookingData] = useState<any>(null); // Store form data for later booking creation
   // Manage Booking state
   const [manageId, setManageId] = useState('');
   const [manageAction, setManageAction] = useState<'none' | 'reschedule' | 'cancel'>('none');
@@ -153,6 +162,9 @@ const ContactForm = () => {
         break;
       case "service":
         error = validateService(value);
+        // Update selected service when service changes
+        const service = getServiceById(value);
+        setSelectedService(service || null);
         break;
       case "time":
         error = validateTime(value, availableSlots, form.date);
@@ -227,8 +239,97 @@ const ContactForm = () => {
     setLoading(true);
     setStatus(null);
     try {
-      // Send all booking fields, including company
-      const payload = {
+      console.log('API_BASE:', API_BASE);
+      console.log('Checking slot availability for:', { date: form.date, time: form.time });
+      
+      const slotCheckRes = await fetch(`${API_BASE}/api/check-slot`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify({
+          date: form.date,
+          time: form.time
+        })
+      });
+
+      console.log('Slot check response status:', slotCheckRes.status);
+
+      if (slotCheckRes.status === 409) {
+        setStatus("slot-booked");
+        setLoading(false);
+        setPendingSubmit(false);
+        return;
+      }
+
+      if (!slotCheckRes.ok) {
+        const errorData = await slotCheckRes.json();
+        console.error('Slot check error:', errorData);
+        setStatus("error");
+        setLoading(false);
+        setPendingSubmit(false);
+        return;
+      }
+      
+      // Slot is available, show payment information
+      const service = getServiceById(form.service);
+      console.log('Selected service:', service);
+      
+      if (service) {
+        setPaymentInfo({
+          totalAmount: service.fullPrice,
+          minimumPayment: service.minimumPayment,
+          remainingAmount: service.remainingAmount,
+          serviceName: service.name,
+          duration: service.duration
+        });
+        setShowPaymentInfoModal(true);
+        setStatus("payment-required");
+      } else {
+        console.error('Service not found for:', form.service);
+        setStatus("error");
+      }
+    } catch (error) {
+      console.error('Error in actuallySubmit:', error);
+      setStatus("error");
+    }
+
+    setLoading(false);
+    setPendingSubmit(false);
+  };
+  //     const res = await fetch(`${API_BASE}/api/contact`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(payload)
+  //     });
+  //     if (res.ok) {
+  //       const data = await res.json();
+  //       setConsultationId(data.bookingId);
+  //       setPaymentInfo(data.paymentInfo);
+  //       setShowPayment(true);
+  //       setStatus("success");
+  //       setForm({ fullName: "", email: "", phone: "", company: "", service: "", dob: "", date: "", time: "" });
+  //     } else if (res.status === 409) {
+  //       setStatus("slot-booked");
+  //     } else {
+  //       setStatus("error");
+  //     }
+  //   } catch {
+  //     setStatus("error");
+  //   }
+  //   setLoading(false);
+  //   setPendingSubmit(false);
+  // };
+
+  const handlePayment = async () => {
+    if (!paymentInfo || !form) {
+      setStatus("error");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Store booking data for later creation
+      const bookingPayload = {
         name: form.fullName,
         email: form.email,
         phone: form.phone,
@@ -238,18 +339,77 @@ const ContactForm = () => {
         time: form.time,
         service: form.service
       };
+      // TODO: Integrate with actual payment gateway(Stripe/Razorpay)
+      // For now, simulate payment success
+      const paymentSuccess = true;
+
+      if (paymentSuccess) {
+        // Payment successful, now create booking
+        const res = await fetch(`${API_BASE}/api/contact`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...bookingPayload,
+            paymentStatus: "partial_paid",
+            paidAmount: paymentInfo.minimumPayment,
+          })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setConsultationId(data.bookingId);
+          setStatus("success");
+          setShowPayment(false);
+          setForm({ fullName: "", email: "", phone: "", company: "", service: "", dob: "", date: "", time: "" });
+        } else {
+          setStatus("error");
+        }
+      } else {
+        setStatus("payment-failed");
+      }
+    } catch {
+      setStatus("error");
+    }
+    setLoading(false);
+  };
+
+  const handlePayLater = async () => {
+    if (!paymentInfo || !form) {
+      setStatus("error");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Create booking with pending payment status
+      const bookingPayload = {
+        name: form.fullName,
+        email: form.email,
+        phone: form.phone,
+        company: form.company,
+        dob: form.dob,
+        date: form.date,
+        time: form.time,
+        service: form.service
+      };
+
       const res = await fetch(`${API_BASE}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({
+          ...bookingPayload,
+          paymentStatus: "pending",
+          paidAmount: 0,
+        })
       });
+
       if (res.ok) {
         const data = await res.json();
         setConsultationId(data.bookingId);
-        setStatus("success");
+        setStatus("pay-later-success");
+        setShowPayment(false);
         setForm({ fullName: "", email: "", phone: "", company: "", service: "", dob: "", date: "", time: "" });
-      } else if (res.status === 409) {
-        setStatus("slot-booked");
       } else {
         setStatus("error");
       }
@@ -257,7 +417,50 @@ const ContactForm = () => {
       setStatus("error");
     }
     setLoading(false);
-    setPendingSubmit(false);
+  };
+
+  const handlePaymentSuccess = async (paymentData: any) => {
+    try {
+      // Create booking with partial payment status
+      const bookingPayload = {
+        name: form.fullName,
+        email: form.email,
+        phone: form.phone,
+        company: form.company,
+        dob: form.dob,
+        date: form.date,
+        time: form.time,
+        service: form.service
+      };
+
+      const res = await fetch(`${API_BASE}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...bookingPayload,
+          paymentStatus: "partial_paid",
+          paidAmount: paymentInfo.minimumPayment,
+        })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setConsultationId(data.bookingId);
+        setStatus("success");
+        setShowPaymentModal(false);
+        setShowPayment(false);
+        setForm({ fullName: "", email: "", phone: "", company: "", service: "", dob: "", date: "", time: "" });
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
+  };
+
+  const handlePaymentFailure = (error: string) => {
+    setStatus("payment-failed");
+    setShowPaymentModal(false);
   };
 
   return (
@@ -342,12 +545,20 @@ const ContactForm = () => {
             {errors.time && <p className="text-red-600 text-sm">{errors.time}</p>}
           </div>
         </div>
+        
+
         <div className="flex justify-center">
           <InteractiveHoverButton type="submit" className="w-full sm:w-auto" text={loading ? "Booking..." : "Book Consultation"} disabled={loading} />
         </div>
+        {status === "payment-required" && (
+          <div className="text-orange-600 text-center">
+            <p>Please pay ₹{paymentInfo?.minimumPayment} now to confirm your booking.</p>
+            <p>The remaining amount can be paid anytime before or after your consultation.</p>
+          </div>
+        )}
         {status === "success" && (
           <div className="text-green-600 text-center">
-            <p>Your booking was successful!</p>
+            <p>Your booking was created successfully!</p>
             {consultationId && (
               <p className="mt-1">Your Consultation ID is: <span className="font-mono text-orange-700">{consultationId}</span></p>
             )}
@@ -355,6 +566,27 @@ const ContactForm = () => {
         )}
         {status === "slot-booked" && <p className="text-orange-600 text-center">This slot is already booked. Please choose another.</p>}
         {status === "error" && <p className="text-red-600 text-center">Something went wrong. Please try again.</p>}
+        {status === "payment-failed" && (
+          <div className="text-red-600 text-center">
+            <p>Payment failed. Please try again.</p>
+          </div>
+        )}
+        {status === "pay-later-success" && (
+          <div className="text-blue-600 text-center">
+            <p>✅ Booking confirmed! Your slot is reserved.</p>
+            {consultationId && (
+              <p className="mt-1">Your Consultation ID is: <span className="font-mono text-orange-700">{consultationId}</span></p>
+            )}
+            <p className="mt-2 text-sm">
+              You can pay the minimum amount (₹{paymentInfo?.minimumPayment}) anytime before your consultation.
+            </p>
+            <p className="text-sm">
+              We'll send you a payment reminder via email.
+            </p>
+          </div>
+        )}
+        
+
         </form>
       )}
       {activeTab === 'manage' && (
@@ -514,6 +746,32 @@ const ContactForm = () => {
         open={showRefund}
         onAccept={handleAcceptRefund}
         onClose={() => { setShowRefund(false); setPendingSubmit(false); }}
+      />
+      
+      {/* Payment Modal */}
+      <PaymentModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        amount={paymentInfo?.minimumPayment || 0}
+        serviceName={paymentInfo?.serviceName || ''}
+        onSuccess={handlePaymentSuccess}
+        onFailure={handlePaymentFailure}
+      />
+      
+      {/* Payment Info Modal */}
+      <PaymentInfoModal
+        open={showPaymentInfoModal}
+        onClose={() => setShowPaymentInfoModal(false)}
+        paymentInfo={paymentInfo}
+        onPayNow={() => {
+          setShowPaymentInfoModal(false);
+          setShowPaymentModal(true);
+        }}
+        onPayLater={() => {
+          setShowPaymentInfoModal(false);
+          handlePayLater();
+        }}
+        loading={loading}
       />
     </>
   );

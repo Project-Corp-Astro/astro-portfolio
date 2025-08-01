@@ -243,8 +243,6 @@ const Chatbot: React.FC = () => {
     setMessages([...messages, userMessage]);
     setInput('');
 
-
-
     // Enhanced intent detection and context handling
     const intent = detectIntent(input);
     const contextualResponse = generateContextualResponse(intent, input, conversationContext);

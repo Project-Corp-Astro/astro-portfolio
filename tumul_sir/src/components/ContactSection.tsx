@@ -18,7 +18,7 @@ const ContactSection = () => {
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start text-center">
           {/* Left Column - Contact Information & Why Choose */}
-          <div className="space-y-8">
+          <div className="space-y-8 pt-36">
             {/* Contact Details */}
             <div>
               <h3 className="text-2xl font-serif font-bold mb-6 text-lavender-dark text-center">Contact Details</h3>
