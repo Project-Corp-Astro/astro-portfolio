@@ -51,10 +51,22 @@ const contactSchema = new mongoose.Schema({
   // Payment fields
   paymentStatus: {
     type: String,
-    enum: ['pending', 'paid', 'failed', 'refunded'],
+    enum: ['pending', 'partial_paid', 'fully_paid', 'failed', 'refunded'],
     default: 'pending'
   },
-  paymentAmount: {
+  totalAmount: {
+    type: Number,
+    default: 0
+  },
+  minimumPaymentAmount: {
+    type: Number,
+    default: 0
+  },
+  remainingAmount: {
+    type: Number,
+    default: 0
+  },
+  paidAmount: {
     type: Number,
     default: 0
   },
@@ -64,6 +76,28 @@ const contactSchema = new mongoose.Schema({
   paymentId: {
     type: String
   },
+  paymentHistory: [{
+    amount: {
+      type: Number,
+      required: true
+    },
+    type: {
+      type: String,
+      enum: ['minimum', 'remaining'],
+      required: true
+    },
+    date: {
+      type: Date,
+      default: Date.now
+    },
+    status: {
+      type: String,
+      enum: ['success', 'failed', 'pending'],
+      default: 'pending'
+    },
+    paymentId: String,
+    transactionId: String
+  }],
   // Lead qualification fields
   businessType: {
     type: String,

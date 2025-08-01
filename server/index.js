@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/database.js";
 import Contact from "./models/Contact.js";
 import fetch from "node-fetch";
+import { getServiceConfig } from "./config/services.js";
 // const Contact = require("./models/Contact");
 
 
@@ -16,6 +17,11 @@ connectDB();
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Test endpoint
+app.get("/api/test", (req, res) => {
+  res.json({ message: "Server is running!" });
+});
 // Reschedule a booking by ASTRO-ID
 app.patch("/api/bookings/:astroId/reschedule", async (req, res) => {
   try {
@@ -173,11 +179,22 @@ app.post("/api/contact", async (req, res) => {
     if (!phone) {
       return res.status(400).json({ error: "Missing phone number" });
     }
+    if (!service) {
+      return res.status(400).json({ error: "Missing service selection" });
+    }
+    
+    // Get service pricing information
+    const serviceConfig = getServiceConfig(service);
+    if (!serviceConfig) {
+      return res.status(400).json({ error: "Invalid service selected" });
+    }
+    
     // Check if slot is already booked
     const existingBooking = await Contact.findOne({ date, time, status: { $ne: 'cancelled' } });
     if (existingBooking) {
       return res.status(409).json({ message: "Slot already booked" });
     }
+    
     // Generate a unique ASTRO-ID (e.g., ASTRO12345)
     let astroId;
     let isUnique = false;
@@ -187,9 +204,29 @@ app.post("/api/contact", async (req, res) => {
       const existing = await Contact.findOne({ astroId });
       if (!existing) isUnique = true;
     }
-    // Create new contact in MongoDB
+    
+    // Create new contact in MongoDB with payment information
     const newContact = new Contact({
-      name, email,phone, company, service, dob, date, time, astroId
+      name, 
+      email, 
+      phone, 
+      company, 
+      service, 
+      dob, 
+      date, 
+      time, 
+      astroId,
+      totalAmount: serviceConfig.fullPrice,
+      minimumPaymentAmount: serviceConfig.minimumPayment,
+      remainingAmount: serviceConfig.remainingAmount,
+      paidAmount: req.body.paidAmount || 0,
+      paymentStatus: req.body.paymentStatus || 'pending',
+      paymentHistory: req.body.paidAmount ? [{
+        amount: req.body.paidAmount,
+        type: 'minimum',
+        date: new Date(),
+        status: 'success'
+      }] : []
     });
     await newContact.save();
     // Send email notification
@@ -206,9 +243,19 @@ app.post("/api/contact", async (req, res) => {
       subject: `New Consultation Request: ${service}`,
       text: `\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nDOB: ${dob}\nDate: ${date}\nTime: ${time}\nCompany: ${company}\nService: ${service}\nConsultation ID: ${astroId}\n`,
     });
+    const isPartialPayment = req.body.paymentStatus === 'partial_paid';
     res.status(200).json({ 
-      message: "Message sent successfully!",
-      bookingId: astroId 
+      message: isPartialPayment 
+        ? "Booking confirmed! Minimum payment received. You can pay the remaining amount anytime."
+        : "Booking created successfully! Please complete minimum payment to confirm your booking.",
+      bookingId: astroId,
+      paymentInfo: {
+        totalAmount: serviceConfig.fullPrice,
+        minimumPayment: serviceConfig.minimumPayment,
+        remainingAmount: serviceConfig.remainingAmount,
+        serviceName: serviceConfig.name,
+        duration: serviceConfig.duration
+      }
     });
   } catch (error) {
     console.error('Error processing contact form:', error);
@@ -217,6 +264,30 @@ app.post("/api/contact", async (req, res) => {
       return res.status(409).json({ message: "Slot already booked" });
     }
     res.status(500).json({ message: "Failed to send message.", error: error.message });
+  }
+});
+
+// Check slot availability without creating booking
+app.post("/api/check-slot", async (req, res) => {
+  try {
+    const { date, time } = req.body;
+    if (!date || !time) {
+      return res.status(400).json({ error: "Missing date or time" });
+    }
+
+    // Check if the slot is already booked
+    const existingBooking = await Contact.findOne({
+      date, time, status: { $ne: 'cancelled' }
+    });
+
+    if (existingBooking) {
+      return res.status(409).json({ message: "Slot already booked" });
+    }
+
+    res.status(200).json({ message: "Slot is available" });
+  } catch (error) {
+    console.error('Error checking slot availability:', error);
+    res.status(500).json({ error: "Failed to check slot availability" });
   }
 });
 
