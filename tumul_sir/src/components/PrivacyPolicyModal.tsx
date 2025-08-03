@@ -7,103 +7,106 @@ const PrivacyPolicyModal = ({ open, onClose }) => {
   return createPortal(
     <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60">
       <div className="bg-white rounded-2xl p-6 md:p-8 max-w-lg w-full mx-4 shadow-2xl border border-orange/30">
-        <h2 className="text-xl md:text-2xl font-serif font-bold text-orange mb-4 text-center">Privacy Policy</h2>
+        <h2 className="text-xl md:text-2xl font-serif font-bold text-orange mb-4 text-center">How We Protect Your Privacy</h2>
         <div className="mb-6 max-h-64 overflow-y-auto text-gray-800 text-sm leading-relaxed space-y-4 px-1">
-          <ol className="list-decimal pl-6 space-y-2">
+          <p className="mb-4">
+            Your privacy is important to us. Here's how we take care of your information when you visit our website and use our services:
+          </p>
+          <ol className="list-decimal pl-6 space-y-3">
             <li>
-              <strong>Introduction</strong>
-              <p className="text-xs">Dr. Tumul Raathi ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our astrology consultation website and use our services.</p>
+              <strong>Our Promise to You</strong>
+              <p className="text-xs mt-1">Dr. Tumul Raathi and our team are committed to keeping your information safe and private. This policy explains how we collect, use, and protect your data when you visit our astrology consultation website.</p>
             </li>
             <li>
-              <strong>Information We Collect</strong>
-              <ul className="list-disc pl-6 text-xs">
-                <li>Personal Information: Full name, contact details, date of birth, astrological information, company name, consultation preferences, booking information</li>
-                <li>Technical Information: IP address, device information, browser type, website usage patterns, chatbot conversation data</li>
+              <strong>What Information We Collect</strong>
+              <ul className="list-disc pl-6 text-xs mt-1">
+                <li><strong>Personal Details:</strong> Your name, contact information, birth date, astrological details, company name, and consultation preferences</li>
+                <li><strong>Technical Info:</strong> Your device information, how you use our website, and conversations with our chatbot</li>
               </ul>
             </li>
             <li>
               <strong>How We Use Your Information</strong>
-              <ul className="list-disc pl-6 text-xs">
-                <li>Provide astrology consultations and personalized services</li>
-                <li>Process bookings and manage appointments</li>
-                <li>Send confirmation emails and important updates</li>
-                <li>Improve our services and user experience</li>
-                <li>Respond to your inquiries and support requests</li>
-                <li>Ensure security and prevent fraud</li>
-                <li>Comply with legal obligations</li>
+              <ul className="list-disc pl-6 text-xs mt-1">
+                <li>To provide you with personalized astrology consultations</li>
+                <li>To manage your bookings and appointments</li>
+                <li>To send you important updates and confirmations</li>
+                <li>To improve our services and make your experience better</li>
+                <li>To respond to your questions and help you when needed</li>
+                <li>To keep our website secure and protect against fraud</li>
+                <li>To follow legal requirements</li>
               </ul>
             </li>
             <li>
-              <strong>Information Sharing and Disclosure</strong>
-              <ul className="list-disc pl-6 text-xs">
-                <li>We do not sell, trade, or rent your personal information to third parties</li>
-                <li>We may share information with service providers for payment processing, email delivery, and website hosting</li>
-                <li>We may share information when required by law or to protect our rights and safety</li>
-                <li>We may share information with your explicit consent for specific purposes</li>
+              <strong>We Keep Your Information Private</strong>
+              <ul className="list-disc pl-6 text-xs mt-1">
+                <li>We never sell, trade, or rent your personal information to anyone</li>
+                <li>We only share information with trusted service providers who help us run our business (like payment processors and email services)</li>
+                <li>We may share information if required by law or to protect everyone's safety</li>
+                <li>We'll only share your information with others if you specifically give us permission</li>
               </ul>
             </li>
             <li>
-              <strong>Data Security</strong>
-              <ul className="list-disc pl-6 text-xs">
-                <li>Encryption of sensitive data during transmission</li>
-                <li>Secure servers and databases</li>
-                <li>Regular security audits and updates</li>
-                <li>Limited access to personal information</li>
-                <li>Employee training on data protection</li>
+              <strong>Keeping Your Data Safe</strong>
+              <ul className="list-disc pl-6 text-xs mt-1">
+                <li>We use encryption to protect your data when it's being sent to us</li>
+                <li>Your information is stored on secure servers</li>
+                <li>We regularly check and update our security measures</li>
+                <li>Only authorized team members can access your personal information</li>
+                <li>Our team is trained on how to protect your privacy</li>
               </ul>
             </li>
             <li>
-              <strong>Data Retention</strong>
-              <p className="text-xs">We retain your personal information only for as long as necessary to provide our services, comply with legal obligations, resolve disputes, and enforce our agreements. Consultation records are typically retained for 7 years for professional and legal purposes.</p>
+              <strong>How Long We Keep Your Information</strong>
+              <p className="text-xs mt-1">We only keep your information for as long as we need it to serve you, follow the law, or resolve any issues. We typically keep consultation records for 7 years for professional and legal purposes.</p>
             </li>
             <li>
               <strong>Your Rights and Choices</strong>
-              <ul className="list-disc pl-6 text-xs">
-                <li>Access: Request a copy of your personal information</li>
-                <li>Correction: Update or correct inaccurate information</li>
-                <li>Deletion: Request deletion of your personal information</li>
-                <li>Portability: Receive your data in a portable format</li>
-                <li>Objection: Object to certain processing activities</li>
-                <li>Withdrawal: Withdraw consent at any time</li>
+              <ul className="list-disc pl-6 text-xs mt-1">
+                <li><strong>Access:</strong> You can ask us for a copy of your information</li>
+                <li><strong>Update:</strong> You can correct any information that's not accurate</li>
+                <li><strong>Delete:</strong> You can ask us to delete your information</li>
+                <li><strong>Portable:</strong> You can get your data in a format you can use elsewhere</li>
+                <li><strong>Object:</strong> You can tell us if you don't want us to use your information in certain ways</li>
+                <li><strong>Withdraw:</strong> You can change your mind about giving us permission at any time</li>
               </ul>
             </li>
             <li>
-              <strong>Cookies and Tracking</strong>
-              <ul className="list-disc pl-6 text-xs">
-                <li>Essential Cookies: Required for website functionality</li>
-                <li>Analytics Cookies: Help us understand website usage</li>
-                <li>Preference Cookies: Remember your settings and preferences</li>
-                <li>Marketing Cookies: Provide relevant content and advertisements</li>
+              <strong>Cookies and Website Tracking</strong>
+              <ul className="list-disc pl-6 text-xs mt-1">
+                <li><strong>Essential Cookies:</strong> These help our website work properly</li>
+                <li><strong>Analytics Cookies:</strong> These help us understand how people use our website</li>
+                <li><strong>Preference Cookies:</strong> These remember your settings and choices</li>
+                <li><strong>Marketing Cookies:</strong> These help us show you relevant content</li>
               </ul>
             </li>
             <li>
-              <strong>Third-Party Services</strong>
-              <ul className="list-disc pl-6 text-xs">
-                <li>Payment Processors: Stripe, Razorpay for secure payments</li>
-                <li>Email Services: For sending confirmations and updates</li>
-                <li>Analytics: Google Analytics for website insights</li>
-                <li>Chat Services: OpenAI for chatbot functionality</li>
+              <strong>Services We Use</strong>
+              <ul className="list-disc pl-6 text-xs mt-1">
+                <li><strong>Payment Processing:</strong> Stripe and Razorpay for secure payments</li>
+                <li><strong>Email Services:</strong> For sending you confirmations and updates</li>
+                <li><strong>Website Analytics:</strong> Google Analytics to understand how our website is used</li>
+                <li><strong>Chatbot:</strong> OpenAI to provide our chatbot service</li>
               </ul>
             </li>
             <li>
-              <strong>Children's Privacy</strong>
-              <p className="text-xs">Our services are not intended for children under 18 years of age. We do not knowingly collect personal information from children under 18. If you believe we have collected information from a child under 18, please contact us immediately.</p>
+              <strong>Protecting Children</strong>
+              <p className="text-xs mt-1">Our services are for adults 18 and older. We don't knowingly collect information from children under 18. If you think we might have information from someone under 18, please contact us right away.</p>
             </li>
             <li>
-              <strong>International Data Transfers</strong>
-              <p className="text-xs">Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place to protect your data in accordance with this Privacy Policy and applicable laws.</p>
+              <strong>International Data</strong>
+              <p className="text-xs mt-1">Your information might be processed in countries other than your own. We make sure it's protected according to this policy and local laws.</p>
             </li>
             <li>
-              <strong>Changes to This Policy</strong>
-              <p className="text-xs">We may update this Privacy Policy from time to time. We will notify you of any material changes by posting the new policy on our website and updating the "Last updated" date. Your continued use of our services after such changes constitutes acceptance of the updated policy.</p>
+              <strong>Updates to This Policy</strong>
+              <p className="text-xs mt-1">We might update this policy from time to time. If we make important changes, we'll let you know by posting the new policy on our website. Using our services after changes means you accept the updated policy.</p>
             </li>
             <li>
-              <strong>Contact Information</strong>
-              <ul className="list-disc pl-6 text-xs">
+              <strong>Get in Touch</strong>
+              <ul className="list-disc pl-6 text-xs mt-1">
                 <li>Dr. Tumul Raathi</li>
-                <li>Email: privacy@tumulraathi.com</li>
-                <li>Phone: +91-XXXXXXXXXX</li>
-                <li>Address: [Your Business Address]</li>
+                <li>Email: consult@corpastro.com</li>
+                <li>Phone: +91 93460 35354</li>
+                <li>Address: 502, Lalithanjali Apartment, 6-3-347/11, Dwarakapuri Colony, Punjagutta, Hyderabad, Telangana, India - 500082</li>
               </ul>
             </li>
           </ol>
