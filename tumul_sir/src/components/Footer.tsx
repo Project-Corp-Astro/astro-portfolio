@@ -1,14 +1,15 @@
 
-import { Link } from "react-router-dom";
-import TermsViewModal from "./TermsViewModal";
-import { useState } from "react";
-import RefundPolicyViewModal from "./RefundPolicyViewModal";
-import PrivacyPolicyModal from "./PrivacyPolicyModal";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Footer = () => {
-  const [showTerms, setShowTerms] = useState(false);
-  const [showRefund, setShowRefund] = useState(false);
-  const [showPrivacy, setShowPrivacy] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const openModal = (path: string) => {
+    navigate(path, {
+      state: { background: location },
+    });
+  };
   return (
     <footer className="bg-cosmic-brown text-foreground py-8 md:py-12">
       <div className="container mx-auto px-4 md:px-6">
@@ -47,7 +48,7 @@ const Footer = () => {
               <li>
                 <button
                   className="hover:text-orange transition-colors underline bg-transparent border-none p-0 cursor-pointer text-center md:text-left"
-                  onClick={() => setShowTerms(true)}
+                  onClick={() => openModal('/terms&conditions')}
                   type="button"
                 >
                   Terms & Conditions
@@ -56,7 +57,7 @@ const Footer = () => {
               <li>
                 <button
                   className="hover:text-orange transition-colors underline bg-transparent border-none p-0 cursor-pointer text-center md:text-left"
-                  onClick={() => setShowRefund(true)}
+                  onClick={() => openModal('/refund-policy')}
                   type="button"
                 >
                   Refund Policy
@@ -65,7 +66,7 @@ const Footer = () => {
               <li>
                 <button
                   className="hover:text-orange transition-colors underline bg-transparent border-none p-0 cursor-pointer text-center md:text-left"
-                  onClick={() => setShowPrivacy(true)}
+                  onClick={() => openModal('/privacy-policy')}
                   type="button"
                 >
                   Privacy Policy
@@ -79,18 +80,7 @@ const Footer = () => {
           <p>Designed with cosmic intention • Built for transformation</p>
         </div>
       </div>
-      <TermsViewModal
-        open={showTerms}
-        onClose={() => setShowTerms(false)}
-      />
-      <RefundPolicyViewModal
-        open={showRefund}
-        onClose={() => setShowRefund(false)}
-      />
-      <PrivacyPolicyModal
-        open={showPrivacy}
-        onClose={() => setShowPrivacy(false)}
-      />
+
     </footer>
   );
 };
