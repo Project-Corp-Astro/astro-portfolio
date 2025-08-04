@@ -1,13 +1,21 @@
-import React from "react";
-import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
+import { Modal } from "./ui/modal";
 
 const RefundPolicyViewModal = ({ open, onClose }) => {
-  if (!open) return null;
+  const navigate = useNavigate();
 
-  return createPortal(
-    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60">
-      <div className="bg-white rounded-2xl p-6 md:p-8 max-w-lg w-full mx-4 shadow-2xl border border-orange/30">
-        <h2 className="text-xl md:text-2xl font-serif font-bold text-orange mb-4 text-center">Our Refund Promise</h2>
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      navigate(-1);
+    }
+  };
+
+  if (open === false) return null;
+
+  return (
+    <Modal isOpen={open ?? true} onClose={handleClose} title="Our Refund Promise">
         <div className="mb-6 max-h-64 overflow-y-auto text-gray-800 text-sm leading-relaxed space-y-4 px-1">
           <p className="mb-4">
             We want you to feel completely comfortable booking with us. Here's how we handle refunds and cancellations:
@@ -70,13 +78,8 @@ const RefundPolicyViewModal = ({ open, onClose }) => {
           </ol>
           <p className="mt-4 text-xs text-gray-500">Dr. Tumul Raathi, 502, Lalithanjali Apartment, 6-3-347/11, Dwarakapuri Colony, Punjagutta, Hyderabad, Telangana, India - 500082</p>
         </div>
-        <div className="flex justify-end gap-2">
-          <button onClick={onClose} className="px-4 py-2 rounded bg-gray-200 text-gray-700 font-semibold">Close</button>
-        </div>
-      </div>
-    </div>,
-    document.body
+    </Modal>
   );
 };
 
-export default RefundPolicyViewModal; 
+export default RefundPolicyViewModal;
