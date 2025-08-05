@@ -12,9 +12,7 @@ pnpm-debug.log*
 # Dependency directories
 jspm_packages/
 
-# Build output
-dist/
-build/
+
 
 # Production
 .env
