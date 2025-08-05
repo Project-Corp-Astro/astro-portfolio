@@ -46,31 +46,19 @@ const Footer = () => {
               <li><a href="mailto:consult@corpastro.com" className="hover:text-orange transition-colors">consult@corpastro.com</a></li>
               <li><a href="#about" className="hover:text-orange transition-colors">About Dr. Raathi</a></li>
               <li>
-                <button
-                  className="hover:text-orange transition-colors underline bg-transparent border-none p-0 cursor-pointer text-center md:text-left"
-                  onClick={() => openModal('/terms&conditions')}
-                  type="button"
-                >
+                <Link to="/terms-and-conditions" className="hover:text-orange transition-colors">
                   Terms & Conditions
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  className="hover:text-orange transition-colors underline bg-transparent border-none p-0 cursor-pointer text-center md:text-left"
-                  onClick={() => openModal('/refund-policy')}
-                  type="button"
-                >
+                <Link to="/refund-policy" className="hover:text-orange transition-colors">
                   Refund Policy
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  className="hover:text-orange transition-colors underline bg-transparent border-none p-0 cursor-pointer text-center md:text-left"
-                  onClick={() => openModal('/privacy-policy')}
-                  type="button"
-                >
+                <Link to="/privacy-policy" className="hover:text-orange transition-colors">
                   Privacy Policy
-                </button>
+                </Link>
               </li>
             </ul>
           </div>

@@ -86,7 +86,7 @@ const ParticleBackground: React.FC = () => {
         left: 0,
         width: "100vw",
         height: "100vh",
-        zIndex: -1,
+        zIndex: 0, // Changed from -1 to 0 to ensure visibility above background layers
         pointerEvents: "none",
       }}
       aria-hidden="true"
