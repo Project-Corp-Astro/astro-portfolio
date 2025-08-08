@@ -15,17 +15,17 @@ const InteractiveHoverButton = React.forwardRef<
     <button
       ref={ref}
       className={cn(
-        "group relative min-w-[8rem] px-6 py-2 cursor-pointer overflow-hidden rounded-full border-2 border-orange/30 font-semibold flex items-center justify-center transition-all duration-300 bg-[#FFD700] shadow-[0_4px_24px_rgba(0,0,0,0.18),0_1.5px_6px_rgba(0,0,0,0.16),inset_0_1.5px_8px_rgba(255,255,255,0.18)]",
+        "group relative min-w-[8rem] px-6 py-2 cursor-pointer overflow-hidden rounded-full border-2 border-orange/30 flex items-center justify-center transition-all duration-300 bg-[#FFD700] shadow-[0_4px_24px_rgba(0,0,0,0.18),0_1.5px_6px_rgba(0,0,0,0.16),inset_0_1.5px_8px_rgba(255,255,255,0.18)]",
         className,
       )}
       {...props}
     >
       {/* Outgoing text */}
-      <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap transition-all duration-300 group-hover:translate-x-10 group-hover:opacity-0 z-10 text-orange-900 drop-shadow-sm">
+      <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap transition-all duration-300 group-hover:translate-x-10 group-hover:opacity-0 z-10 text-orange-900 drop-shadow-sm font-semibold">
         {text}
       </span>
       {/* Incoming text + icon */}
-      <span className="absolute left-1/2 top-1/2 flex items-center gap-2 whitespace-nowrap opacity-0 translate-x-[-2.5rem] -translate-y-1/2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-[-50%] z-10 text-orange-900 drop-shadow-sm">
+      <span className="absolute left-1/2 top-1/2 flex items-center gap-2 whitespace-nowrap opacity-0 translate-x-[-2.5rem] -translate-y-1/2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-[-50%] z-10 text-orange-900 drop-shadow-sm font-semibold">
         <span>{text}</span>
         <ArrowRight />
       </span>

@@ -30,7 +30,7 @@ const ServicesSection = () => {
   ];
 
   return (
-    <section id="services" className="py-24 md:py-32 mt-10">
+    <section id="services" className="py-16 md:py-20 mt-6">
       <div className="container mx-auto px-6 ">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-lavender-dark mb-6">

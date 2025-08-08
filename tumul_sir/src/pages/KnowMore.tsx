@@ -142,10 +142,10 @@ const KnowMore = () => {
             Book a consultation with Dr. Tumul Raathi and discover how ancient wisdom can guide your modern business success.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <InteractiveHoverButton onClick={() => setModalOpen(true)} className="w-full sm:w-auto" text="Schedule Your Consultation" />
+            <InteractiveHoverButton onClick={() => setModalOpen(true)} className="w-full sm:w-auto text-button" text="Schedule Your Consultation" />
             <ContactModal open={isModalOpen} onClose={() => setModalOpen(false)} />
             <Link to="/">
-              <InteractiveHoverButton className="w-full sm:w-auto" text="Back to Home" />
+              <InteractiveHoverButton className="w-full sm:w-auto text-button" text="Back to Home" />
             </Link>
           </div>
         </div>

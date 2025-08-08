@@ -15,13 +15,13 @@ const Services = () => {
       <div className="flex flex-col sm:flex-row justify-center items-center mb-14 gap-4 px-4">
         <InteractiveHoverButton 
           onClick={() => setModalOpen(true)} 
-          className="w-full sm:w-auto text-sm sm:text-base" 
+          className="w-full sm:w-auto text-button" 
           text="Schedule Your Consultation" 
         />
         <ContactModal open={isModalOpen} onClose={() => setModalOpen(false)} />
         <Link to="/" className="w-full sm:w-auto">
           <InteractiveHoverButton 
-            className="w-full text-sm sm:text-base" 
+            className="w-full text-button" 
             text="Back to Home" 
           />
         </Link>

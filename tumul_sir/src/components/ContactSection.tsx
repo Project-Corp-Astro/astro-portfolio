@@ -5,7 +5,7 @@ import ContactForm from "./ContactForm";
 
 const ContactSection = () => {
   return (
-    <section id="contact" className="py-24 md:py-32 relative">
+    <section id="contact" className="py-16 md:py-20 relative">
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-6xl mx-auto text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-lavender-dark mb-6 text-center">

@@ -1,26 +1,230 @@
+/* Import Google Fonts for professional typography */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&family=Merriweather:wght@300;400;700;900&family=Source+Sans+Pro:wght@300;400;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+
 html {
   scroll-behavior: smooth;
 }
+
+/* Example: How to add custom downloaded fonts */
+/*
+@font-face {
+  font-family: 'YourCustomFont';
+  src: url('/fonts/YourCustomFont.woff2') format('woff2'),
+       url('/fonts/YourCustomFont.woff') format('woff'),
+       url('/fonts/YourCustomFont.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'YourCustomFont';
+  src: url('/fonts/YourCustomFont-Bold.woff2') format('woff2'),
+       url('/fonts/YourCustomFont-Bold.woff') format('woff'),
+       url('/fonts/YourCustomFont-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+*/
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Headings: System Sans-Serif */
+/* Professional Typography System */
+/* Headings: Playfair Display - Elegant serif for headings */
 h1, h2, h3, h4, h5, h6, .font-heading, .font-serif {
-  font-family: Arial, Helvetica, system-ui, sans-serif;
-  font-weight: 700;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
-/* Body: System Sans-Serif */
+/* Body: Source Sans Pro - More engaging and readable sans-serif */
 body, p, .font-body, .font-sans {
-  font-family: Arial, Helvetica, system-ui, sans-serif;
-  font-weight: 400;
+  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.7;
 }
 
-/* Ensure normal font weight for non-bold text if needed */
-.font-normal, .font-medium, .font-light {
+/* Professional font weight utilities */
+.font-light {
+  font-weight: 300 !important;
+}
+
+.font-normal {
   font-weight: 400 !important;
+}
+
+.font-medium {
+  font-weight: 500 !important;
+}
+
+.font-semibold {
+  font-weight: 600 !important;
+}
+
+.font-bold {
+  font-weight: 700 !important;
+}
+
+.font-extrabold {
+  font-weight: 800 !important;
+}
+
+.text-nav-heading{
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  font-size: 1.8rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.text-nav-caption{
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+}
+
+.text-nav-link {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem; /* Fixed from 1.95rem to appropriate size */
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+/* Professional typography classes */
+.text-display {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  font-size: 3.5rem;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.text-heading {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 600;
+  font-size: 2.5rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.text-subheading {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 600;
+  font-size: 1.75rem;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.text-body {
+  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.7;
+  letter-spacing: -0.01em;
+}
+
+.text-caption {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+/* Additional font classes */
+.font-merriweather {
+  font-family: 'Merriweather', Georgia, serif;
+}
+
+.font-source-sans {
+  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.font-roboto {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Professional font combinations */
+.text-elegant {
+  font-family: 'Merriweather', Georgia, serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.text-clean {
+  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.text-modern {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* Button typography classes */
+.text-button {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: 600;
+  font-size: 0.875rem; /* 14px - Mobile */
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+@media (min-width: 768px) {
+  .text-button {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 1rem; /* 16px - Desktop */
+  }
+}
+
+.text-button-large {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 600;
+  font-size: 1rem; /* 16px - Mobile */
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+@media (min-width: 768px) {
+  .text-button-large {
+    font-size: 1.125rem; /* 18px - Desktop */
+  }
+}
+
+/* Engaging body text alternatives */
+.text-body-engaging {
+  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 500;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  letter-spacing: 0.01em;
+}
+
+.text-body-warm {
+  font-family: 'Merriweather', Georgia, serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+}
+
+.text-body-modern {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
 }
 
 /* Spiritual Corporate Astrology Brand Colors */

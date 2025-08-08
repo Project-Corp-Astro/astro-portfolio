@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Star } from "lucide-react";
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-import { useEffect, useRef } from "react";
+import { Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { useEffect, useRef, useState } from "react";
 
 const TestimonialsSection = () => {
   const testimonials = [
@@ -25,16 +25,18 @@ const TestimonialsSection = () => {
     }
   ];
 
-  // Autoplay logic
+  // Autoplay logic with pause on hover
   const carouselApiRef = useRef<any>(null);
+  const [isPaused, setIsPaused] = useState(false);
+  
   useEffect(() => {
     const interval = setInterval(() => {
-      if (carouselApiRef.current) {
+      if (carouselApiRef.current && !isPaused) {
         carouselApiRef.current.scrollNext();
       }
     }, 4000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isPaused]);
 
   return (
     <section id="testimonials" className="py-24 md:py-32">
@@ -48,7 +50,13 @@ const TestimonialsSection = () => {
           </p>
         </div>
         
-        <Carousel opts={{ loop: true }} setApi={api => (carouselApiRef.current = api)} className="max-w-2xl mx-auto">
+        <Carousel 
+          opts={{ loop: true }} 
+          setApi={api => (carouselApiRef.current = api)} 
+          className="max-w-2xl mx-auto relative"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
           <CarouselContent>
             {testimonials.map((testimonial, index) => (
               <CarouselItem key={index} className="px-2 w-80 md:w-96 h-96 flex items-center justify-center">
@@ -71,6 +79,8 @@ const TestimonialsSection = () => {
               </CarouselItem>
             ))}
           </CarouselContent>
+          <CarouselPrevious className="absolute -left-12 top-1/2 transform -translate-y-1/2 bg-orange/20 hover:bg-orange/30 text-orange border-orange/30" />
+          <CarouselNext className="absolute -right-12 top-1/2 transform -translate-y-1/2 bg-orange/20 hover:bg-orange/30 text-orange border-orange/30" />
         </Carousel>
       </div>
     </section>
