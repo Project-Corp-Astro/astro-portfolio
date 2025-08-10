@@ -58,8 +58,8 @@ const HeroSection = () => {
               <span
                 className={
                   isMobile
-                    ? "text-subheading block text-foreground text-3xl mt-1 font-bold"
-                    : "text-subheading text-foreground block mt-3 font-bold"
+                    ? "text-subheading block text-lavender-dark text-3xl mt-1 font-bold font-relaxed"
+                    : "text-subheading text-lavender-dark block mt-3 font-bold font-relaxed"
                 }
               >
                 Business Astrologer
