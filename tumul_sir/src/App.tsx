@@ -109,12 +109,15 @@ const AppRoutes = () => {
   );
 };
 
+
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
-      <AppRoutes />
-    </BrowserRouter>
-  </QueryClientProvider>
+  <div className="typography-style-3 min-h-screen">
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+    </QueryClientProvider>
+  </div>
 );
 
 export default App;

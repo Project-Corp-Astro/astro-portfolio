@@ -56,8 +56,8 @@ const Header = () => {
             className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border-2 border-orange shadow"
           />
           <div>
-            <h1 className="text-nav-heading md:text-heading text-orange font-semibold">Dr. Tumul Raathi</h1>
-            <p className="text-nav-caption md:text-subheading text-brown font-medium">Business Astrologer</p>
+            {/* <h1 className="text-nav-heading md:text-heading text-orange font-semibold">Dr. Tumul Raathi</h1> */}
+            <h1 className="md:text-subheading text-lavender-dark font-bold">Business Astrologer</h1>
           </div>
         </div>
         

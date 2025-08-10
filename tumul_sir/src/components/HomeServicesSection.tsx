@@ -37,7 +37,7 @@ const HomeServicesSection = () => {
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-lavender-dark mb-6">
             Sacred Services
           </h2>
-          <p className="text-xl text-foreground max-w-3xl mx-auto font-bold">
+          <p className="text-body-warm text-xl text-foreground max-w-3xl mx-auto font-bold">
             Comprehensive spiritual solutions combining multiple disciplines for holistic business success
           </p>
         </div>
@@ -54,7 +54,7 @@ const HomeServicesSection = () => {
                   <CardTitle className="text-2xl font-serif text-foreground font-bold">
                     {service.title}
                   </CardTitle>
-                  <CardDescription className="text-foreground text-lg font-bold">
+                  <CardDescription className="text-body-warm text-lg font-semibold">
                     {service.description}
                   </CardDescription>
                 </CardHeader>
@@ -63,7 +63,7 @@ const HomeServicesSection = () => {
                     {service.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-center justify-center gap-3">
                         <div className="w-2 h-2 bg-cosmic-gold rounded-full"></div>
-                        <span className="text-foreground font-bold">{feature}</span>
+                        <span className="text-body-warm font-semibold">{feature}</span>
                       </li>
                     ))}
                   </ul>
@@ -75,8 +75,8 @@ const HomeServicesSection = () => {
         <div className="flex justify-center mt-12">
           <a href="/services">
           <InteractiveHoverButton
-                className="w-full sm:w-auto font-bold"
-                text="Know More About My Services"
+                className="text-body-warm w-full sm:w-auto font-bold"
+                text="Know More"
                 onClick={() => {
                   document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
                 }}

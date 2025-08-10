@@ -16,82 +16,56 @@ const ContactSection = () => {
             cosmic intelligence can transform your corporate path.
           </p>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start text-center">
-          {/* Left Column - Contact Information & Why Choose */}
-          <div className="space-y-8 pt-36">
-            {/* Contact Details */}
-            <div>
-              <h3 className="text-2xl font-serif font-bold mb-6 text-lavender-dark text-center">Contact Details</h3>
-              <div className="space-y-6">
-                <div>
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                    <MapPin className="w-5 h-5 text-orange flex-shrink-0" />
-                    <h4 className="font-serif font-semibold text-lg text-lavender-dark">Address</h4>
-                  </div>
-                  <p className="text-brown/90 leading-relaxed text-center">
-                    502, Lalithanjali Apartment,<br />
-                    6-3-347/11, Dwarakapuri Colony,<br />
-                    Punjagutta, Hyderabad,<br />
-                    Telangana, India - 500082
-                  </p>
-                </div>
-                <div>
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                    <Mail className="w-5 h-5 text-orange flex-shrink-0" />
-                    <h4 className="font-serif font-semibold text-lg text-lavender-dark">Email</h4>
-                  </div>
-                  <p className="text-brown/90 text-center">consult@corpastro.com</p>
-                </div>
-                <div>
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                    <Phone className="w-5 h-5 text-orange flex-shrink-0" />
-                    <h4 className="font-semibold text-lg text-lavender-dark">Phone</h4>
-                  </div>
-                  <p className="text-brown/90 text-center">+91 93460 35354</p>
-                </div>
-              </div>
-            </div>
-            {/* Why Choose Corp Astro */}
-            <div>
-              <h3 className="text-2xl font-serif font-bold mb-6 text-lavender-dark text-center">Why Choose Corp Astro?</h3>
-              <ul className="space-y-4">
-                <li className="flex items-center justify-center gap-3">
-                  <Star className="w-5 h-5 text-orange flex-shrink-0" />
-                  <span className="text-brown/90">Scientific and practical approach to Vedic astrology</span>
-                </li>
-                <li className="flex items-center justify-center gap-3">
-                  <Star className="w-5 h-5 text-orange flex-shrink-0" />
-                  <span className="text-brown/90">Multi-disciplinary expertise in corporate consulting</span>
-                </li>
-                <li className="flex items-center justify-center gap-3">
-                  <Star className="w-5 h-5 text-orange flex-shrink-0" />
-                  <span className="text-brown/90">Modern, tech-savvy approach with traditional wisdom</span>
-                </li>
-                <li className="flex items-center justify-center gap-3">
-                  <Star className="w-5 h-5 text-orange flex-shrink-0" />
-                  <span className="text-brown/90">Focus on soul-centric business success</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-          {/* Right Column - Contact Form */}
-          <div className="flex justify-center">
-            <Card className="w-full max-w-lg md:max-w-xl md:w-[600px] rounded-3xl">
-              <CardHeader>
-                <CardTitle className="text-2xl font-serif text-lavender-dark text-center">
-                  Book Your Consultation
-                </CardTitle>
-                <p className="text-center text-lavender-dark/70">
-                  Take the first step towards cosmic business alignment
-                </p>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <ContactForm />
-                <p className="text-center text-sm text-lavender-dark/60">
-                  All consultations are completely confidential and conducted by me itself...
-                </p>
-              </CardContent>
-            </Card>
+        <div className="flex flex-col items-center gap-10">
+          <Card className="w-full max-w-lg md:max-w-xl md:w-[600px] rounded-3xl">
+            <CardHeader>
+              <CardTitle className="text-2xl font-serif text-lavender-dark text-center">
+                Book Your Consultation
+              </CardTitle>
+              <p className="text-center text-lavender-dark/70">
+                Take the first step towards cosmic business alignment
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <ContactForm />
+              <p className="text-center text-sm text-lavender-dark/60">
+                All consultations are completely confidential and conducted by me itself...
+              </p>
+            </CardContent>
+          </Card>
+          {/* Why Choose Corp Astro */}
+          <div>
+            <h3 className="text-2xl font-serif font-bold mb-6 text-lavender-dark text-center">Why Choose Corp Astro?</h3>
+            <ul className="space-y-4">
+              <li className="flex items-center justify-center gap-3">
+                <img
+                  src="/corpastro.png"
+                  className="w-5 h-5 md:w-6 md:h-6 rounded-full object-cover border-2 border-orange shadow"
+                />                
+                <span className="text-brown/90 text-body-warm">Scientific and practical approach to Vedic astrology</span>
+              </li>
+              <li className="flex items-center justify-center gap-3">
+                <img
+                  src="/corpastro.png"
+                  className="w-5 h-5 md:w-6 md:h-6 rounded-full object-cover border-2 border-orange shadow"
+                />
+                <span className="text-brown/90 text-body-warm">Multi-disciplinary expertise in corporate consulting</span>
+              </li>
+              <li className="flex items-center justify-center gap-3">
+                <img
+                  src="/corpastro.png"
+                  className="w-5 h-5 md:w-6 md:h-6 rounded-full object-cover border-2 border-orange shadow"
+                />
+                <span className="text-brown/90 text-body-warm">Modern, tech-savvy approach with traditional wisdom</span>
+              </li>
+              <li className="flex items-center justify-center gap-3">
+                <img
+                  src="/corpastro.png"
+                  className="w-5 h-5 md:w-6 md:h-6 rounded-full object-cover border-2 border-orange shadow"
+                />
+                <span className="text-brown/90 text-body-warm">Focus on soul-centric business success</span>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

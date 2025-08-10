@@ -61,7 +61,7 @@ const KnowMore = () => {
       <section className="pt-32 pb-16">
         <div className="container mx-auto px-6">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-serif font-bold text-foreground mb-6">
+            <h2 className="text-4xl font-serif font-bold text-lavender-dark mb-6">
               Areas of Expertise
             </h2>
             <p className="text-xl text-foreground max-w-2xl mx-auto">
@@ -97,7 +97,7 @@ const KnowMore = () => {
       <section className="py-16">
         <div className="container mx-auto px-6">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-serif font-bold text-foreground mb-6">
+            <h2 className="text-4xl font-serif font-bold text-lavender-dark mb-6">
               Track Record of Success
             </h2>
             <p className="text-xl text-foreground max-w-2xl mx-auto">
@@ -135,7 +135,7 @@ const KnowMore = () => {
       {/* Call to Action Section */}
       <section className="py-16">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-4xl font-serif font-bold text-foreground mb-6">
+          <h2 className="text-4xl font-serif font-bold text-lavender-dark mb-6">
             Ready to Transform Your Business?
           </h2>
           <p className="text-xl text-foreground mb-8 max-w-2xl mx-auto">

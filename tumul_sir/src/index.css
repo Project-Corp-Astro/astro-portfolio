@@ -1,5 +1,31 @@
-/* Import Google Fonts for professional typography */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&family=Merriweather:wght@300;400;700;900&family=Source+Sans+Pro:wght@300;400;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&family=Merriweather:wght@300;400;700;900&family=Source+Sans+Pro:wght@300;400;600;700&family=Roboto:wght@300;400;500;700&family=Cinzel+Decorative:wght@400;700;900&family=Lato:wght@300;400;700&family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@400;500;700&display=swap');
+
+/* === GLOBAL TYPOGRAPHY STYLES === */
+
+/* Style 1: Heading - Playfair Display, Body - Lato */
+.typography-style-1 h1, .typography-style-1 h2, .typography-style-1 h3, .typography-style-1 h4, .typography-style-1 h5, .typography-style-1 h6, .typography-style-1 .font-heading {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+.typography-style-1 body, .typography-style-1 p, .typography-style-1 .font-body {
+  font-family: 'Lato', Arial, sans-serif;
+}
+
+/* Style 2: Heading - Cormorant Garamond, Body - Montserrat */
+.typography-style-2 h1, .typography-style-2 h2, .typography-style-2 h3, .typography-style-2 h4, .typography-style-2 h5, .typography-style-2 h6, .typography-style-2 .font-heading {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+.typography-style-2 body, .typography-style-2 p, .typography-style-2 .font-body {
+  font-family: 'Montserrat', Arial, sans-serif;
+}
+
+/* Style 3: Heading - Cinzel Decorative, Body - Merriweather */
+.typography-style-3 h1, .typography-style-3 h2, .typography-style-3 h3, .typography-style-3 h4, .typography-style-3 h5, .typography-style-3 h6, .typography-style-3 .font-heading {
+  font-family: 'Cinzel Decorative', Georgia, serif;
+}
+.typography-style-3 body, .typography-style-3 p, .typography-style-3 .font-body {
+  font-family: 'Merriweather', Georgia, serif;
+}
 
 html {
   scroll-behavior: smooth;
@@ -35,7 +61,7 @@ html {
 /* Professional Typography System */
 /* Headings: Playfair Display - Elegant serif for headings */
 h1, h2, h3, h4, h5, h6, .font-heading, .font-serif {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Cinzel Decorative', 'Playfair Display', Georgia, serif;
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -99,16 +125,8 @@ body, p, .font-body, .font-sans {
 }
 
 /* Professional typography classes */
-.text-display {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-weight: 700;
-  font-size: 3.5rem;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-}
-
 .text-heading {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Cinzel Decorative', Georgia, serif;
   font-weight: 600;
   font-size: 2.5rem;
   line-height: 1.2;
@@ -123,54 +141,6 @@ body, p, .font-body, .font-sans {
   letter-spacing: -0.01em;
 }
 
-.text-body {
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-weight: 500;
-  font-size: 1rem;
-  line-height: 1.7;
-  letter-spacing: -0.01em;
-}
-
-.text-caption {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
-}
-
-/* Additional font classes */
-.font-merriweather {
-  font-family: 'Merriweather', Georgia, serif;
-}
-
-.font-source-sans {
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-.font-roboto {
-  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-/* Professional font combinations */
-.text-elegant {
-  font-family: 'Merriweather', Georgia, serif;
-  font-weight: 400;
-  line-height: 1.6;
-}
-
-.text-clean {
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-weight: 400;
-  line-height: 1.6;
-}
-
-.text-modern {
-  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-weight: 400;
-  line-height: 1.6;
-}
 
 /* Button typography classes */
 .text-button {

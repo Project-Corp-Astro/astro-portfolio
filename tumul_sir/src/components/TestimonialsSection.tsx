@@ -45,7 +45,7 @@ const TestimonialsSection = () => {
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-lavender-dark mb-6">
             Voices of Transformation
           </h2>
-          <p className="text-xl text-cosmic-brown/80 max-w-3xl mx-auto">
+          <p className="text-body-warm font-semibold text-xl text-cosmic-brown/80 max-w-3xl mx-auto">
             Discover how cosmic wisdom has guided leaders to unprecedented success
           </p>
         </div>
