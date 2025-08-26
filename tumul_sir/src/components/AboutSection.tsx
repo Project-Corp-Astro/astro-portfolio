@@ -25,69 +25,62 @@ const AboutSection = () => {
             </div>
             
             <div className="space-y-6">
-              <Card>
-                <CardContent className="p-8">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 cosmic-gradient rounded-lg flex items-center justify-center flex-shrink-0">
-                      {/* <Star className="w-6 h-6 text-orange fill-orange" /> */}
-                      <img
-                        src="/corpastro.png"
-                        className="w-5 h-5 md:w-6 md:h-6 rounded-full object-cover border-2 border-orange shadow"
-                      />    
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-serif font-semibold text-foreground mb-2 font-bold">
-                        Multi-Disciplinary Expertise
-                      </h3>
-                      <p className="text-body-warm text-foreground font-bold">
-                        Vedic Astrology, Numerology, Nameology, Commercial Vaastu, and Signature Analysis
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="p-8">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 cosmic-gradient rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="group bg-white/80 rounded-3xl transition-all duration-300 hover:scale-105 will-change-transform p-8 flex flex-col justify-between overflow-hidden">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-orange-300 via-yellow-200 to-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     <img
                       src="/corpastro.png"
-                      className="w-5 h-5 md:w-6 md:h-6 rounded-full object-cover border-2 border-orange shadow"
+                      className="w-5 h-5 md:w-6 md:h-6 rounded-full object-cover border-2 border-orange"
                     />    
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-serif font-semibold text-foreground mb-2 font-bold">
-                        Corporate Focus
-                      </h3>
-                      <p className="text-body-warm text-foreground font-bold">
-                        Specialized in helping business enterprises and creating soul-centric successful businesses
-                      </p>
-                    </div>
                   </div>
-                </CardContent>
-              </Card>
+                  <div>
+                    <h3 className="text-xl font-serif font-semibold text-orange-900 mb-2 font-bold">
+                      Multi-Disciplinary Expertise
+                    </h3>
+                    <p className="text-gray-700 font-bold">
+                      Vedic Astrology, Numerology, Nameology, Commercial Vaastu, and Signature Analysis
+                    </p>
+                  </div>
+                </div>
+              </div>
               
-              <Card>
-                <CardContent className="p-8">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 cosmic-gradient rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="group bg-white/80 rounded-3xl transition-all duration-300 hover:scale-105 will-change-transform p-8 flex flex-col justify-between overflow-hidden">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-orange-300 via-yellow-200 to-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     <img
                       src="/corpastro.png"
-                      className="w-5 h-5 md:w-6 md:h-6 rounded-full object-cover border-2 border-orange shadow"
+                      className="w-5 h-5 md:w-6 md:h-6 rounded-full object-cover border-2 border-orange"
                     />    
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-serif font-semibold text-foreground mb-2 font-bold">
-                        Scientific Methodology
-                      </h3>
-                      <p className="text-body-warm text-foreground font-bold">
-                        Modern, tech-savvy approach combining logical thinking with traditional wisdom
-                      </p>
-                    </div>
                   </div>
-                </CardContent>
-              </Card>
+                  <div>
+                    <h3 className="text-xl font-serif font-semibold text-orange-900 mb-2 font-bold">
+                      Corporate Focus
+                    </h3>
+                    <p className="text-gray-700 font-bold">
+                      Specialized in helping business enterprises and creating soul-centric successful businesses
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="group bg-white/80 rounded-3xl transition-all duration-300 hover:scale-105 will-change-transform p-8 flex flex-col justify-between overflow-hidden">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-orange-300 via-yellow-200 to-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <img
+                      src="/corpastro.png"
+                      className="w-5 h-5 md:w-6 md:h-6 rounded-full object-cover border-2 border-orange"
+                    />    
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-serif font-semibold text-orange-900 mb-2 font-bold">
+                      Scientific Methodology
+                    </h3>
+                    <p className="text-gray-700 font-bold">
+                      Modern, tech-savvy approach combining logical thinking with traditional wisdom
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

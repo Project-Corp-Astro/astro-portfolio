@@ -60,22 +60,26 @@ const TestimonialsSection = () => {
           <CarouselContent>
             {testimonials.map((testimonial, index) => (
               <CarouselItem key={index} className="px-2 w-80 md:w-96 h-96 flex items-center justify-center">
-                <Card className="w-full h-full rounded-3xl flex flex-col justify-between transition-all duration-300 shadow-none">
-                  <CardContent className="p-8 flex flex-col justify-between h-full">
-                    <div className="flex gap-1 mb-4 justify-center">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="w-5 h-5 text-orange fill-orange" />
-                      ))}
+                <div className="w-full h-full rounded-3xl overflow-hidden">
+                  <div className="group relative w-full h-full bg-white/80 rounded-3xl transition-all duration-300 flex flex-col justify-between hover:scale-105 will-change-transform">
+                    {/* Hover effect */}
+                    <div className="absolute bottom-0 left-0 w-full h-0 group-hover:h-2/3 bg-gradient-to-t from-orange-200 via-yellow-100 to-transparent transition-all duration-500 z-0"></div>
+                    <div className="relative z-10 p-8 flex flex-col justify-between h-full">
+                      <div className="flex gap-1 mb-4 justify-center">
+                        {[...Array(testimonial.rating)].map((_, i) => (
+                          <Star key={i} className="w-5 h-5 text-orange-500 fill-orange-400" />
+                        ))}
+                      </div>
+                      <p className="text-orange-900 mb-6 italic text-lg text-center">
+                        "{testimonial.content}"
+                      </p>
+                      <div className="text-center">
+                        <h4 className="font-semibold text-orange-900">{testimonial.name}</h4>
+                        <p className="text-orange-700 text-sm">{testimonial.title}</p>
+                      </div>
                     </div>
-                    <p className="text-cosmic-brown/80 mb-6 italic text-lg text-center">
-                      "{testimonial.content}"
-                    </p>
-                    <div className="text-center">
-                      <h4 className="font-semibold text-cosmic-brown">{testimonial.name}</h4>
-                      <p className="text-cosmic-brown/60 text-sm">{testimonial.title}</p>
-                    </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </CarouselItem>
             ))}
           </CarouselContent>
