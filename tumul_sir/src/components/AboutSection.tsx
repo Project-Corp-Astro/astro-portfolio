@@ -25,57 +25,69 @@ const AboutSection = () => {
             </div>
             
             <div className="space-y-6">
-              <div className="group bg-white/80 rounded-3xl transition-all duration-300 hover:scale-105 will-change-transform p-8 flex flex-col justify-between overflow-hidden">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-orange-300 via-yellow-200 to-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="group relative bg-white/60 backdrop-blur-md rounded-xl shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden border border-white/40 h-full flex flex-col hover:scale-105 hover:bg-white/70 hover:border-white/60 p-6 md:p-8">
+                {/* Gradient hover effect overlay */}
+                <div className="absolute inset-0 w-full h-0 group-hover:h-full bg-gradient-to-br from-orange-200/40 via-yellow-100/30 to-transparent backdrop-blur-sm transition-all duration-500 z-0 rounded-xl"></div>
+                
+                {/* Content with higher z-index */}
+                <div className="relative z-10 flex items-start gap-4">
+                  <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-orange-300 via-yellow-200 to-orange-100 rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-110 group-hover:shadow-lg transition-all duration-300">
                     <img
                       src="/corpastro.png"
-                      className="w-5 h-5 md:w-6 md:h-6 rounded-full object-cover border-2 border-orange"
+                      className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 rounded-full object-cover border-2 border-orange group-hover:rotate-12 transition-transform duration-300"
                     />    
                   </div>
                   <div>
-                    <h3 className="text-xl font-serif font-semibold text-orange-900 mb-2 font-bold">
+                    <h3 className="text-lg md:text-xl font-serif font-semibold text-orange-900 mb-2 font-bold group-hover:text-orange-700 transition-colors duration-300">
                       Multi-Disciplinary Expertise
                     </h3>
-                    <p className="text-gray-700 font-bold">
+                    <p className="text-gray-700 font-bold text-sm md:text-base group-hover:text-gray-800 transition-colors duration-300">
                       Vedic Astrology, Numerology, Nameology, Commercial Vaastu, and Signature Analysis
                     </p>
                   </div>
                 </div>
               </div>
               
-              <div className="group bg-white/80 rounded-3xl transition-all duration-300 hover:scale-105 will-change-transform p-8 flex flex-col justify-between overflow-hidden">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-orange-300 via-yellow-200 to-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="group relative bg-white/60 backdrop-blur-md rounded-xl shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden border border-white/40 h-full flex flex-col hover:scale-105 hover:bg-white/70 hover:border-white/60 p-6 md:p-8">
+                {/* Gradient hover effect overlay */}
+                <div className="absolute inset-0 w-full h-0 group-hover:h-full bg-gradient-to-br from-orange-200/40 via-yellow-100/30 to-transparent backdrop-blur-sm transition-all duration-500 z-0 rounded-xl"></div>
+                
+                {/* Content with higher z-index */}
+                <div className="relative z-10 flex items-start gap-4">
+                  <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-orange-300 via-yellow-200 to-orange-100 rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-110 group-hover:shadow-lg transition-all duration-300">
                     <img
                       src="/corpastro.png"
-                      className="w-5 h-5 md:w-6 md:h-6 rounded-full object-cover border-2 border-orange"
+                      className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 rounded-full object-cover border-2 border-orange group-hover:rotate-12 transition-transform duration-300"
                     />    
                   </div>
                   <div>
-                    <h3 className="text-xl font-serif font-semibold text-orange-900 mb-2 font-bold">
+                    <h3 className="text-lg md:text-xl font-serif font-semibold text-orange-900 mb-2 font-bold group-hover:text-orange-700 transition-colors duration-300">
                       Corporate Focus
                     </h3>
-                    <p className="text-gray-700 font-bold">
+                    <p className="text-gray-700 font-bold text-sm md:text-base group-hover:text-gray-800 transition-colors duration-300">
                       Specialized in helping business enterprises and creating soul-centric successful businesses
                     </p>
                   </div>
                 </div>
               </div>
               
-              <div className="group bg-white/80 rounded-3xl transition-all duration-300 hover:scale-105 will-change-transform p-8 flex flex-col justify-between overflow-hidden">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-orange-300 via-yellow-200 to-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="group relative bg-white/60 backdrop-blur-md rounded-xl shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden border border-white/40 h-full flex flex-col hover:scale-105 hover:bg-white/70 hover:border-white/60 p-6 md:p-8">
+                {/* Gradient hover effect overlay */}
+                <div className="absolute inset-0 w-full h-0 group-hover:h-full bg-gradient-to-br from-orange-200/40 via-yellow-100/30 to-transparent backdrop-blur-sm transition-all duration-500 z-0 rounded-xl"></div>
+                
+                {/* Content with higher z-index */}
+                <div className="relative z-10 flex items-start gap-4">
+                  <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-orange-300 via-yellow-200 to-orange-100 rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-110 group-hover:shadow-lg transition-all duration-300">
                     <img
                       src="/corpastro.png"
-                      className="w-5 h-5 md:w-6 md:h-6 rounded-full object-cover border-2 border-orange"
+                      className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 rounded-full object-cover border-2 border-orange group-hover:rotate-12 transition-transform duration-300"
                     />    
                   </div>
                   <div>
-                    <h3 className="text-xl font-serif font-semibold text-orange-900 mb-2 font-bold">
+                    <h3 className="text-lg md:text-xl font-serif font-semibold text-orange-900 mb-2 font-bold group-hover:text-orange-700 transition-colors duration-300">
                       Scientific Methodology
                     </h3>
-                    <p className="text-gray-700 font-bold">
+                    <p className="text-gray-700 font-bold text-sm md:text-base group-hover:text-gray-800 transition-colors duration-300">
                       Modern, tech-savvy approach combining logical thinking with traditional wisdom
                     </p>
                   </div>

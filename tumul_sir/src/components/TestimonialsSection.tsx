@@ -60,22 +60,22 @@ const TestimonialsSection = () => {
           <CarouselContent>
             {testimonials.map((testimonial, index) => (
               <CarouselItem key={index} className="px-2 w-80 md:w-96 h-96 flex items-center justify-center">
-                <div className="w-full h-full rounded-3xl overflow-hidden">
-                  <div className="group relative w-full h-full bg-white/80 rounded-3xl transition-all duration-300 flex flex-col justify-between hover:scale-105 will-change-transform">
-                    {/* Hover effect */}
-                    <div className="absolute bottom-0 left-0 w-full h-0 group-hover:h-2/3 bg-gradient-to-t from-orange-200 via-yellow-100 to-transparent transition-all duration-500 z-0"></div>
-                    <div className="relative z-10 p-8 flex flex-col justify-between h-full">
+                <div className="w-full h-full rounded-xl overflow-hidden">
+                  <div className="group relative w-full h-full bg-white/60 backdrop-blur-md rounded-xl shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden border border-white/40 flex flex-col justify-between hover:scale-105 hover:bg-white/70 hover:border-white/60">
+                    {/* Enhanced hover effect with glassmorphism */}
+                    <div className="absolute bottom-0 left-0 w-full h-0 group-hover:h-2/3 bg-gradient-to-t from-orange-200/60 via-yellow-100/60 to-transparent backdrop-blur-sm transition-all duration-500 z-0"></div>
+                    <div className="relative z-10 p-6 md:p-8 flex flex-col justify-between h-full">
                       <div className="flex gap-1 mb-4 justify-center">
                         {[...Array(testimonial.rating)].map((_, i) => (
-                          <Star key={i} className="w-5 h-5 text-orange-500 fill-orange-400" />
+                          <Star key={i} className="w-4 h-4 md:w-5 md:h-5 text-orange-500 fill-orange-400 group-hover:scale-110 transition-transform duration-300" />
                         ))}
                       </div>
-                      <p className="text-orange-900 mb-6 italic text-lg text-center">
+                      <p className="text-orange-900 mb-6 italic text-base md:text-lg text-center leading-relaxed group-hover:text-orange-800 transition-colors duration-300">
                         "{testimonial.content}"
                       </p>
                       <div className="text-center">
-                        <h4 className="font-semibold text-orange-900">{testimonial.name}</h4>
-                        <p className="text-orange-700 text-sm">{testimonial.title}</p>
+                        <h4 className="font-semibold text-orange-900 text-base md:text-lg group-hover:text-orange-800 transition-colors duration-300">{testimonial.name}</h4>
+                        <p className="text-orange-700 text-sm md:text-base group-hover:text-orange-600 transition-colors duration-300">{testimonial.title}</p>
                       </div>
                     </div>
                   </div>
@@ -83,8 +83,8 @@ const TestimonialsSection = () => {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="absolute -left-12 top-1/2 transform -translate-y-1/2 bg-orange/20 hover:bg-orange/30 text-orange border-orange/30" />
-          <CarouselNext className="absolute -right-12 top-1/2 transform -translate-y-1/2 bg-orange/20 hover:bg-orange/30 text-orange border-orange/30" />
+          <CarouselPrevious className="absolute -left-12 top-1/2 transform -translate-y-1/2 bg-white/60 backdrop-blur-md hover:bg-white/80 text-orange border-orange/30 shadow-lg hover:shadow-xl transition-all duration-300" />
+          <CarouselNext className="absolute -right-12 top-1/2 transform -translate-y-1/2 bg-white/60 backdrop-blur-md hover:bg-white/80 text-orange border-orange/30 shadow-lg hover:shadow-xl transition-all duration-300" />
         </Carousel>
       </div>
     </section>
