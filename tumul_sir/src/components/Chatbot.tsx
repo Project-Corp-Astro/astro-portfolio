@@ -36,36 +36,28 @@ interface BookingData {
 // Enhanced service definitions with pricing and descriptions
 const SERVICES = [
   {
-    id: 'business-astrology',
-    name: 'Business Astrology',
+    id: 'vedic-astrology',
+    name: 'Vedic Astrology Consultation',
     description: 'Strategic guidance for companies and entrepreneurs',
     price: 2500,
     duration: '60 minutes',
-    addons: ['numerology', 'vaastu']
-  },
-  {
-    id: 'personal-astrology',
-    name: 'Personal Astrology',
-    description: 'Life advice, relationships, and personal growth',
-    price: 1500,
-    duration: '45 minutes',
-    addons: ['numerology', 'signature-analysis']
+    addons: ['numerology', 'commercial-vaastu']
   },
   {
     id: 'numerology',
-    name: 'Numerology',
+    name: 'Numerology & Nameology',
     description: 'Insights based on numbers and names',
     price: 1200,
     duration: '30 minutes',
-    addons: ['personal-astrology', 'business-astrology']
+    addons: ['vedic-astrology', 'signature-analysis']
   },
   {
-    id: 'vaastu',
-    name: 'Vaastu',
+    id: 'commercial-vaastu',
+    name: 'Commercial Vaastu',
     description: 'Space and energy alignment for homes and offices',
     price: 2000,
     duration: '45 minutes',
-    addons: ['business-astrology']
+    addons: ['vedic-astrology']
   },
   {
     id: 'signature-analysis',
@@ -73,7 +65,7 @@ const SERVICES = [
     description: 'Personality and authenticity insights',
     price: 800,
     duration: '20 minutes',
-    addons: ['personal-astrology', 'business-astrology']
+    addons: ['vedic-astrology', 'numerology']
   },
 ];
 
@@ -303,7 +295,7 @@ const Chatbot: React.FC = () => {
       }
       
       setCurrentService(selectedService);
-      setBookingData(prev => ({ ...prev, service: selectedService.name }));
+      setBookingData(prev => ({ ...prev, service: selectedService.id }));
       
       // Suggest add-ons
       const addons = SERVICES.filter(s => selectedService.addons.includes(s.id));
@@ -493,7 +485,7 @@ const Chatbot: React.FC = () => {
       setTimeout(() => {
         setMessages(prev => [
           ...prev,
-          { sender: 'bot', text: `Please confirm your booking:\nService: ${bookingData.service}\nDate: ${bookingData.date}\nSlot: ${bookingData.slot}\nFull Name: ${bookingData.fullName}\nEmail: ${bookingData.email}\nContact: ${bookingData.phone}\nCompany: ${bookingData.company || 'N/A'}\nDOB: ${localDob}\n\nType 'yes' to confirm, 'no' to cancel, or 'edit [field]' (e.g., 'edit date', 'edit slot', 'edit fullName', 'edit email', 'edit phone', 'edit dob', 'edit service').` }
+          { sender: 'bot', text: `Please confirm your booking:\nService: ${currentService.name}\nDate: ${bookingData.date}\nSlot: ${bookingData.slot}\nFull Name: ${bookingData.fullName}\nEmail: ${bookingData.email}\nContact: ${bookingData.phone}\nCompany: ${bookingData.company || 'N/A'}\nDOB: ${localDob}\n\nType 'yes' to confirm, 'no' to cancel, or 'edit [field]' (e.g., 'edit date', 'edit slot', 'edit fullName', 'edit email', 'edit phone', 'edit dob', 'edit service').` }
         ]);
         setLoading(false);
       }, 600);
@@ -555,7 +547,7 @@ const Chatbot: React.FC = () => {
           });
           const data = await res.json();
           if (res.ok) {
-            let confirmationText = `Thank you, ${bookingData.fullName}! Your appointment is booked for ${bookingData.date} at ${bookingData.slot} (${bookingData.service}).\nContact: ${bookingData.phone}\nCompany: ${bookingData.company || 'N/A'}\nYour Consultation ID is: ${data.bookingId}\nYou will receive a confirmation email shortly.`;
+            let confirmationText = `Thank you, ${bookingData.fullName}! Your appointment is booked for ${bookingData.date} at ${bookingData.slot} (${currentService.name}).\nContact: ${bookingData.phone}\nCompany: ${bookingData.company || 'N/A'}\nYour Consultation ID is: ${data.bookingId}\nYou will receive a confirmation email shortly.`;
             
             if (data.bookingId) {
               confirmationText += `\n\nYour ASTRO-ID: ${data.bookingId}`;

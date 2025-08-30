@@ -77,7 +77,7 @@ const YoutubeSection: React.FC = () => {
           >
             <InteractiveHoverButton
               text="Visit Dr. Tumul Raathi's YouTube Channel"
-              className="text-body-warm text-lg px-8 py-3"
+              className="text-button text-lg px-8 py-3"
               type="button"
             />
           </a>

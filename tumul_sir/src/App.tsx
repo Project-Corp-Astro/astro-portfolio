@@ -5,7 +5,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Index from "./pages/Index";
-import Services from "./pages/Services";
+import VedicAstrology from "./pages/VedicAstrology";
+import Numerology from "./pages/Numerology";
+import Commercial from "./pages/Commercial";
+import Signature from "./pages/Signature";
 import KnowMore from "./pages/KnowMore";
 import NotFound from "./pages/NotFound";
 import TermsAndConditions from "./pages/TermsAndConditions";
@@ -49,7 +52,10 @@ const AppRoutes = () => {
       <AnimatePresence mode="wait">
         <Routes location={background || location} key={location.pathname}>
           <Route path="/" element={renderWithLayout(<Index />)} />
-          <Route path="/services" element={renderWithLayout(<Services />)} />
+          <Route path="/vedic-astrology" element={renderWithLayout(<VedicAstrology />)} />
+          <Route path="/numerology-nameology" element={renderWithLayout(<Numerology />)} />
+          <Route path="/commercial-vaastu" element={renderWithLayout(<Commercial />)} /> 
+          <Route path="/signature-analysis" element={renderWithLayout(<Signature />)} />
           <Route path="/knowmore" element={renderWithLayout(<KnowMore />)} />
           
           {/* Legal Pages */}

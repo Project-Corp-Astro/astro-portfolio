@@ -18,7 +18,7 @@ const orbitColors = [
   '#98FB98', // Pale Green
 ];
 
-const CelestialOrbit = () => {
+const CelestialOrbit = ({ centralImage = "/fotor-2025070522532.png", centralAlt = "Central Portrait" }) => {
   const [time, setTime] = useState(0);
 
   useEffect(() => {
@@ -56,10 +56,10 @@ const CelestialOrbit = () => {
       {/* Central image in the orbit */}
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center" style={{ width: centralImgSize, height: centralImgSize }}>
         <img
-          src="/fotor-2025070522532.png"
-          alt="Central Portrait"
+          src={centralImage}
+          alt={centralAlt}
           className="w-full h-full rounded-full object-cover shadow-lg"
-          style={{ background: '#222' }}
+          style={{ background: 'transparent' }}
         />
       </div>
 

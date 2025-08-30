@@ -21,11 +21,11 @@ const InteractiveHoverButton = React.forwardRef<
       {...props}
     >
       {/* Outgoing text */}
-      <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap transition-all duration-300 group-hover:translate-x-10 group-hover:opacity-0 z-10 text-orange-900 drop-shadow-sm font-semibold">
+      <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap transition-all duration-300 group-hover:translate-x-10 group-hover:opacity-0 z-10 text-orange-900 drop-shadow-sm">
         {text}
       </span>
       {/* Incoming text + icon */}
-      <span className="absolute left-1/2 top-1/2 flex items-center gap-2 whitespace-nowrap opacity-0 translate-x-[-2.5rem] -translate-y-1/2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-[-50%] z-10 text-orange-900 drop-shadow-sm font-semibold">
+      <span className="absolute left-1/2 top-1/2 flex items-center gap-2 whitespace-nowrap opacity-0 translate-x-[-2.5rem] -translate-y-1/2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-[-50%] z-10 text-orange-900 drop-shadow-sm">
         <span>{text}</span>
         <ArrowRight />
       </span>
