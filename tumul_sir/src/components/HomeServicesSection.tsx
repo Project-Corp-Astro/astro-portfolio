@@ -66,7 +66,7 @@ const HomeServicesSection = () => {
         </div>
         
         {/* Services Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-7xl mx-auto">
           {services.map((service, index) => {
             const IconComponent = service.icon;
             return (
@@ -77,7 +77,7 @@ const HomeServicesSection = () => {
                 <CardContent className="p-4 md:p-6 flex flex-col h-full">
                   {/* Icon */}
                   {index === 0 ? (
-                    <div className="w-16 h-16 md:w-20 md:h-20 flex items-center justify-center mb-3 md:mb-4 group-hover:scale-110 transition-all duration-300">
+                    <div className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center mb-3 md:mb-4 group-hover:scale-110 transition-all duration-300">
                       <div className="w-full h-full bg-white/20 backdrop-blur-sm rounded-lg border border-lavender-400 flex items-center justify-center">
                       <img 
                         src="/vedic-astrology.png" 
@@ -87,7 +87,7 @@ const HomeServicesSection = () => {
                       </div>
                     </div>
                     ) : index === 1 ? (
-                      <div className="w-18 h-18 md:w-20 md:h-20 flex items-center justify-center mb-3 md:mb-4 group-hover:scale-110 transition-all duration-300">
+                      <div className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center mb-3 md:mb-4 group-hover:scale-110 transition-all duration-300">
                       <div className="w-full h-full bg-white/10 backdrop-blur-sm rounded-lg border border-lavender-300 flex items-center justify-center">
                         <img 
                           src="/numerology.png" 
@@ -97,7 +97,7 @@ const HomeServicesSection = () => {
                         </div>
                       </div>
                     ) : index === 2 ? (
-                      <div className="w-18 h-18 md:w-20 md:h-20 flex items-center justify-center mb-3 md:mb-4 group-hover:scale-110 transition-all duration-300">
+                      <div className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center mb-3 md:mb-4 group-hover:scale-110 transition-all duration-300">
                       <div className="w-full h-full bg-white/10 backdrop-blur-sm rounded-lg border border-lavender-300 flex items-center justify-center">
                         <img 
                           src="/commercial-vastu.png" 
@@ -107,7 +107,7 @@ const HomeServicesSection = () => {
                         </div>
                       </div>
                     ) : index === 3 ? (
-                      <div className="w-18 h-18 md:w-20 md:h-20 flex items-center justify-center mb-3 md:mb:4 group-hover:scale-110 transition-all duration-300">
+                      <div className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center mb-3 md:mb-4 group-hover:scale-110 transition-all duration-300">
                       <div className="w-full h-full bg-white/10 backdrop-blur-sm rounded-lg border border-lavender-300 flex items-center justify-center">
                         <img
                           src="/Signature.png"
@@ -117,13 +117,13 @@ const HomeServicesSection = () => {
                         </div>
                       </div>
                   ) : (
-                    <div className={`w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br ${service.color} rounded-lg flex items-center justify-center mb-3 md:mb-4 shadow-sm group-hover:scale-110 group-hover:shadow-lg transition-all duration-300 overflow-hidden`}>
-                      <IconComponent className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:rotate-12 transition-transform duration-300" />
+                    <div className={`w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 bg-gradient-to-br ${service.color} rounded-lg flex items-center justify-center mb-3 md:mb-4 shadow-sm group-hover:scale-110 group-hover:shadow-lg transition-all duration-300 overflow-hidden`}>
+                      <IconComponent className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-white group-hover:rotate-12 transition-transform duration-300" />
                     </div>
                   )}
 
                   {/* Title */}
-                  <CardTitle className="text-base md:text-lg font-bold text-gray-900 mb-2 md:mb-3 leading-tight group-hover:text-orange-600 transition-colors duration-300">
+                  <CardTitle className="text-sm md:text-base lg:text-lg font-bold text-gray-900 mb-2 md:mb-3 leading-tight group-hover:text-orange-600 transition-colors duration-300">
                     {service.title}
                   </CardTitle>
 
