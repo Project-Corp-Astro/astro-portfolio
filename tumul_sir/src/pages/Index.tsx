@@ -2,27 +2,27 @@ import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import HomeServicesSection from "@/components/HomeServicesSection";
 import AboutSection from "@/components/AboutSection";
-import TestimonialsSection from "@/components/TestimonialsSection";
+import React, { Suspense } from "react";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
-import Chatbot from "@/components/Chatbot";
-import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
-import React, { useRef, useEffect } from "react";
-import YoutubeSection from "../components/YoutubeSection";
+
+const TestimonialsSection = React.lazy(() => import("@/components/TestimonialsSection"));
+const YoutubeSection = React.lazy(() => import("@/components/YoutubeSection"));
 
 const Index = () => {
-
-
   return (
     <div className="min-h-screen">
       <Header />
       <HeroSection />
       <AboutSection />
       <HomeServicesSection />
-      <TestimonialsSection />
-      <YoutubeSection />
+      <Suspense fallback={null}>
+        <TestimonialsSection />
+      </Suspense>
+      <Suspense fallback={null}>
+        <YoutubeSection />
+      </Suspense>
       <ContactSection />
-      <Chatbot />
       <Footer />
     </div>
   );

@@ -3,8 +3,10 @@ import Footer from "@/components/Footer";
 import { Moon, Calendar, Users, TrendingUp, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import ContactModal from "@/components/ContactModal";
-import CelestialOrbit from "@/components/CelestialOrbit";
+// import CelestialOrbit from "@/components/CelestialOrbit";
+const CelestialOrbit = React.lazy(() => import("@/components/CelestialOrbit"))
 import { useState } from "react";
+import React, { Suspense } from "react";
 
 const Signature = () => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -47,12 +49,14 @@ const Signature = () => {
         <div className="container mx-auto px-6 md:px-24">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Celestial Orbit with Signature */}
-            <div className="flex justify-center lg:justify-start order-1 lg:order-1">
-              <CelestialOrbit 
-                centralImage="/Signature.png"
-                centralAlt="Signature Analysis"
-              />
-            </div>
+            <Suspense fallback={<div style={{height: 350}} />}>
+              <div className="flex justify-center lg:justify-start order-1 lg:order-1">
+                <CelestialOrbit 
+                  centralImage="/Signature.png"
+                  centralAlt="Signature Analysis"
+                />
+              </div>
+            </Suspense>
 
             {/* Content */}
             <div className="space-y-6 order-2 lg:order-2">

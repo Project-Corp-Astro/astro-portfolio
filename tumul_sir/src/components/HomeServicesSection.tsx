@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Star, Sun, Moon, Calculator, Eye, Brain, Zap, TrendingUp } from "lucide-react";
+import React, { Suspense } from "react";
 
 const HomeServicesSection = () => {
   const services = [
@@ -54,7 +55,7 @@ const HomeServicesSection = () => {
   ];
 
   return (
-    <section id="services" className="py-16 md:py-20 mt-6">
+  <section id="services" className="py-16 md:py-20 mt-6">
       <div className="container mx-auto px-6 md:px-24">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4 tracking-tight">
@@ -71,7 +72,7 @@ const HomeServicesSection = () => {
             const IconComponent = service.icon;
             return (
                   <Card
-                  key={index}
+                key={index}
                   className="group relative bg-white/60 backdrop-blur-md rounded-xl shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden border border-white/40 h-full flex flex-col hover:scale-105 hover:bg-white/70 hover:border-white/60"
                 >
                 <CardContent className="p-4 md:p-6 flex flex-col h-full relative">
@@ -84,57 +85,65 @@ const HomeServicesSection = () => {
                     {index === 0 ? (
                       <div className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center mb-3 md:mb-4 group-hover:scale-110 transition-all duration-300">
                         <div className="w-full h-full bg-white/20 backdrop-blur-sm rounded-lg border border-lavender-400 flex items-center justify-center">
+                        <Suspense fallback={<div style={{width: "100%", height: "100%"}} />}>
                         <img 
                           src="/vedic-astrology.png" 
                           alt="Vedic Astrology" 
                           className="w-full h-full object-contain group-hover:rotate-12 group-hover:scale-125 transition-transform duration-300"
                         />
+                        </Suspense>
                         </div>
                       </div>
                       ) : index === 1 ? (
                         <div className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center mb-3 md:mb-4 group-hover:scale-110 transition-all duration-300">
                         <div className="w-full h-full bg-white/10 backdrop-blur-sm rounded-lg border border-lavender-300 flex items-center justify-center">
+                          <Suspense fallback={<div style={{width: "100%", height: "100%"}} />}>
                           <img 
                             src="/numerology.png" 
                             alt="Vedic Astrology" 
                             className="w-full h-full object-contain group-hover:rotate-12 group-hover:scale-125 transition-transform duration-300"
                           />
+                          </Suspense>
                           </div>
                         </div>
                       ) : index === 2 ? (
                         <div className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center mb-3 md:mb-4 group-hover:scale-105 transition-all duration-300">
                         <div className="w-full h-full bg-white/10 backdrop-blur-sm rounded-lg border border-lavender-300 flex items-center justify-center">
+                          <Suspense fallback={<div style={{width: "100%", height: "100%"}} />}>
                           <img 
                             src="/commercial-vastu.png" 
                             alt="Commercial Vaastu" 
                             className="w-full h-full object-contain group-hover:rotate-12 group-hover:scale-125 transition-transform duration-300"
                           />
+                          </Suspense>
                           </div>
                         </div>
                       ) : index === 3 ? (
                         <div className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center mb-3 md:mb-4 group-hover:scale-110 transition-all duration-300">
                         <div className="w-full h-full bg-white/10 backdrop-blur-sm rounded-lg border border-lavender-300 flex items-center justify-center">
-                          <img
+                        <Suspense fallback={<div style={{width: "100%", height: "100%"}} />}>
+                        <img
                             src="/Signature.png"
                             alt="Signature Analysis"
                             className="w-full h-full object-contain group-hover:rotate-12 group-hover:scale-125 transition-transform duration-300"
                           />
+                          </Suspense>
                           </div>
                         </div>
                     ) : (
                       <div className={`w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 bg-gradient-to-br ${service.color} rounded-lg flex items-center justify-center mb-3 md:mb-4 shadow-sm group-hover:scale-110 group-hover:shadow-lg transition-all duration-300 overflow-hidden`}>
                         <IconComponent className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-white group-hover:rotate-12 transition-transform duration-300" />
-                      </div>
+                  </div>
                     )}
 
                     {/* Title */}
                     <CardTitle className="text-sm md:text-base lg:text-lg font-bold text-gray-900 mb-2 md:mb-3 leading-tight group-hover:text-orange-700 transition-colors duration-300">
-                      {service.title}
+                    {service.title}
                     </CardTitle>
 
                     {/* Description */}
                     <CardDescription className="text-gray-600 text-xs md:text-sm leading-relaxed mb-3 md:mb-4 flex-grow group-hover:text-gray-800 transition-colors duration-300">
-                      {service.description}
+                    {service.description}
                     </CardDescription>
 
                     {/* Learn More Link */}
@@ -147,7 +156,7 @@ const HomeServicesSection = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
                     </a>
-                  </div>
+                </div>
                 </CardContent>
               </Card>
             );

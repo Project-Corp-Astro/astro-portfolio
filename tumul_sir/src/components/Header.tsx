@@ -113,15 +113,15 @@ const Header = () => {
           <img
             src="/corpastro.png"
             alt="Corp Astro Logo"
-            className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border-2 border-orange shadow"
+            className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border-2 border-orange shadow flex-shrink-0"
           />
-          <div>
+          <div className="flex-shrink-0">
             <h1 className="md:text-subheading text-lavender-dark font-bold">Business Astrologer</h1>
           </div>
         </div>
         
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-8">
+        <div className="hidden lg:flex items-center space-x-8">
           <button 
             onClick={() => {
               document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
@@ -195,7 +195,7 @@ const Header = () => {
         {/* Mobile Menu Button */}
         <button
           onClick={handleMenuButtonClick}
-          className="menu-button md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors touch-manipulation"
+          className="menu-button lg:hidden p-2 rounded-lg hover:bg-white/10 transition-colors touch-manipulation"
           aria-label="Toggle menu"
           type="button"
         >
