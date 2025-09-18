@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { mapWizardToPayload, type ContactWizardState } from "@/types/contact-wizard";
 import { bookContact } from "@/lib/chat";
-
+import { useToast } from "@/hooks/use-toast";
 import IdentityStep from "./IdentityStep";
 import EngagementStep from "./EngagementStep";
 import MeetingStep from "./MeetingStep";
@@ -47,6 +47,7 @@ const initialState: ContactWizardState = {
 
 export default function ContactWizard() {
   const [state, setState] = useState<ContactWizardState>(initialState);
+  const { toast } = useToast();
 
   const goNext = () => {
     if (state.currentStep < 4) {
@@ -80,7 +81,8 @@ export default function ContactWizard() {
         isSubmitting: false,
         error: undefined
       }));
-      alert(confirmation);
+      toast({ title: "Booking confirmed", description: confirmation });
+
     } catch (err: any) {
       setState(prev => ({ ...prev, isSubmitting: false, error: err?.message || "Failed to submit." }));
     }

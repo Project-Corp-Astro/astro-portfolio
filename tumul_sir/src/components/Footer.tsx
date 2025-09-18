@@ -1,10 +1,13 @@
 
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
+import ShippingPolicyModal from "@/components/ShippingPolicyModal";
 import { FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
 
 const Footer = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [showShipping, setShowShipping] = useState(false);
 
   const openModal = (path: string) => {
     navigate(path, {
@@ -82,6 +85,11 @@ const Footer = () => {
                   Privacy Policy
                 </Link>
               </li>
+              <li>
+                <button type="button" className="hover:text-orange hover:underline transition-colors" onClick={() => setShowShipping(true)}>
+                  Shipping Policy
+                </button>
+              </li>
             </ul>
             <div className="flex justify-center md:justify-start gap-4 mt-4">
               <a href="https://instagram.com/corpastro" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="hover:text-orange transition-colors text-xl">
@@ -102,6 +110,8 @@ const Footer = () => {
           <p className="opacity-80">&copy; 2025 Corp Astro</p>
         </div>
       </div>
+
+      <ShippingPolicyModal open={showShipping} onClose={() => setShowShipping(false)} />
 
     </footer>
   );
