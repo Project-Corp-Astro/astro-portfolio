@@ -76,7 +76,10 @@ const validateService = (service: string) => {
     "numerology",
     "commercial-vaastu",
     "signature-analysis",
-    "nameology"
+    "nameology",
+    "mind-meditation-guidance",
+    "energy-healing-chakra",
+    "business-success-coaching"
   ];
   if (!validOptions.includes(service)) return "Invalid service selected.";
   return "";
@@ -527,10 +530,13 @@ const ContactForm = () => {
             <select id="service" value={form.service} onChange={handleChange} className="w-full px-3 py-2 border border-orange/30 rounded-md focus:border-orange focus:outline-none bg-white" required>
               <option value="">Select a service</option>
               <option value="vedic-astrology">Vedic Astrology Consultation</option>
-              <option value="numerology">Numerology Analysis</option>
+              <option value="numerology">Numerology & Nameology</option>
               <option value="commercial-vaastu">Commercial Vaastu</option>
               <option value="signature-analysis">Signature Analysis</option>
               <option value="nameology">Nameology Consultation</option>
+              <option value="mind-meditation-guidance">Mind & Meditation Guidance</option>
+              <option value="energy-healing-chakra">Energy Healing & Chakra Balancing</option>
+              <option value="business-success-coaching">Business Success Coaching</option>
             </select>
             {errors.service && <p className="text-red-600 text-sm">{errors.service}</p>}
           </div>

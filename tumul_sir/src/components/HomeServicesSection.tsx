@@ -8,49 +8,57 @@ const HomeServicesSection = () => {
       icon: Star,
       title: "Vedic Astrology Consultation",
       description: "Transform your life with ancient wisdom. Our comprehensive Vedic Astrology analysis reveals your unique karmic map, strengths, and challenges using the sidereal zodiac for precise, personalized guidance.",
-      color: "from-purple-400 to-pink-400"
+      color: "from-purple-400 to-pink-400",
+      price: "₹4,999"
     },
     {
       icon: Calculator,
       title: "Numerology & Nameology",
       description: "Harness the power of numbers and names to optimize business success and personal growth. Discover your Life Path and understand how your name shapes your destiny and success.",
-      color: "from-blue-400 to-cyan-400"
+      color: "from-blue-400 to-cyan-400",
+      price: "₹1,999"
     },
     {
       icon: Sun,
       title: "Commercial Vaastu",
       description: "Optimize your business space for maximum prosperity and positive energy flow. Our Commercial Vaastu solutions align your workplace with natural energies to attract growth and boost productivity.",
-      color: "from-orange-400 to-yellow-400"
+      color: "from-orange-400 to-yellow-400",
+      price: "₹7,999"
     },
     {
       icon: Moon,
       title: "Signature Analysis",
       description: "Understand personality traits and optimize signatures for success and prosperity. Our signature analysis helps you enhance your personal brand and achieve greater success.",
-      color: "from-indigo-400 to-purple-400"
+      color: "from-indigo-400 to-purple-400",
+      price: "₹3,999"
     },
     {
       icon: Eye,
       title: "Palmistry & Hand Reading",
       description: "Discover your life's journey through the ancient art of palmistry. Our expert analysis reveals your personality traits, career potential, and life path through detailed hand reading.",
-      color: "from-green-400 to-emerald-400"
+      color: "from-green-400 to-emerald-400",
+      price: "₹2,999"
     },
     {
       icon: Brain,
       title: "Mind & Meditation Guidance",
       description: "Achieve mental clarity and spiritual growth through personalized meditation techniques. Our guidance helps you develop mindfulness practices for stress relief and inner peace.",
-      color: "from-teal-400 to-blue-400"
+      color: "from-teal-400 to-blue-400",
+      price: "₹5,999"
     },
     {
       icon: Zap,
       title: "Energy Healing & Chakra Balancing",
       description: "Restore balance and vitality through energy healing practices. Our chakra balancing sessions help clear blockages and promote physical, emotional, and spiritual well-being.",
-      color: "from-yellow-400 to-orange-400"
+      color: "from-yellow-400 to-orange-400",
+      price: "₹6,999"
     },
     {
       icon: TrendingUp,
       title: "Business Success Coaching",
       description: "Accelerate your business growth with spiritual wisdom and strategic guidance. Our coaching combines ancient principles with modern business strategies for sustainable success.",
-      color: "from-red-400 to-pink-400"
+      color: "from-red-400 to-pink-400",
+      price: "₹8,999"
     }
   ];
 
@@ -147,23 +155,36 @@ const HomeServicesSection = () => {
                     </CardDescription>
 
                     {/* Learn More Link */}
-                    <a 
-                      href={index === 0 ? "/vedic-astrology" : index === 1 ? "/numerology-nameology" : index === 2 ? "/commercial-vaastu" : index === 3 ? "/signature-analysis" : "#" }
-                      className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium text-sm transition-all duration-300 mt-auto group-hover:translate-x-1 group-hover:text-blue-800"
-                    >
-                      Learn More
-                      <svg className="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </a>
+                    <div className="mt-auto flex items-center justify-between">
+                      <a
+                        href={index === 0 ? "/vedic-astrology" : index === 1 ? "/numerology-nameology" : index === 2 ? "/commercial-vaastu" : index === 3 ? "/signature-analysis" : "#" }
+                        className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium text-sm transition-all duration-300 group-hover:translate-x-1 group-hover:text-blue-800"
+                      >
+                        Learn More
+                        <svg className="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </a>
+
+                      <div className="flex items-center gap-2">
+                        <span className="inline-flex items-center rounded-md bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
+                          {service.price}
+                        </span>
+                        <button
+                          type="button"
+                          className="inline-flex items-center rounded-md bg-orange-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-orange-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 transition"
+                          onClick={() => alert(`Booking: ${service.title}`)}
+                        >
+                          Book Now
+                        </button>
+                      </div>
+                    </div>
                 </div>
                 </CardContent>
               </Card>
             );
           })}
         </div>
-
-
       </div>
     </section>
   );

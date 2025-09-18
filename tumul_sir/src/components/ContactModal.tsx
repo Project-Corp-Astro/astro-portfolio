@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+import ContactWizard from "./ContactWizard";
 import ContactForm from "./ContactForm";
+const WIZARD_ENABLED = import.meta.env.VITE_CONTACT_WIZARD_ENABLED === 'true';
 
 interface ContactModalProps {
   open: boolean;
@@ -45,7 +47,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ open, onClose }) => {
           <div className="p-8">
             <h2 className="text-2xl font-serif font-bold text-center mb-4 text-lavender-dark">Book Your Consultation</h2>
             <p className="text-center text-lavender-dark/70 mb-6">Take the first step towards cosmic business alignment</p>
-            <ContactForm />
+            {WIZARD_ENABLED ? <ContactWizard /> : <ContactForm />} 
           </div>
         </div>
       </div>
