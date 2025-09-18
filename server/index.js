@@ -133,6 +133,24 @@ function getAllSlots() {
   ];
 }
 
+const BUSINESS_TZ = process.env.BUSINESS_TZ || 'Asia/Kolkata';
+
+function formatYMD(date, timeZone = BUSINESS_TZ) {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
+}
+
+function getNowMinutesInTz(timeZone = BUSINESS_TZ) {
+  const now = new Date();
+  const parts = new Intl.DateTimeFormat('en-GB', { timeZone, hour12: false, hour: '2-digit', minute: '2-digit' }).formatToParts(now);
+  const hh = parseInt(parts.find(p => p.type === 'hour').value, 10);
+  const mm = parseInt(parts.find(p => p.type === 'minute').value, 10);
+  return hh * 60 + mm;
+}
+
 // Endpoint to get available slots for a date
 app.get("/api/available-slots", async (req, res) => {
   try {
@@ -141,24 +159,15 @@ app.get("/api/available-slots", async (req, res) => {
     // Get booked slots from MongoDB
     const bookedContacts = await Contact.find({ date, status: { $ne: 'cancelled' } });
     const bookedSlots = bookedContacts.map(contact => contact.time);
+
     let allSlots = getAllSlots();
 
-    // Filter out past slots if date is today
-    const today = new Date();
-    const requestedDate = new Date(date);
-    if (
-      today.getFullYear() === requestedDate.getFullYear() &&
-      today.getMonth() === requestedDate.getMonth() &&
-      today.getDate() === requestedDate.getDate()
-    ) {
-      const nowMinutes = today.getHours() * 60 + today.getMinutes();
+    const todayYMD = formatYMD(new Date(), BUSINESS_TZ);
+    if (date === todayYMD) {
+      const nowMinutes = getNowMinutesInTz(BUSINESS_TZ);
       allSlots = allSlots.filter(slot => {
-        // slot format: 'HH:00'
-        const [hourStr, minuteStr] = slot.split(":");
-        const hour = parseInt(hourStr, 10);
-        const minute = parseInt(minuteStr, 10);
-        const slotMinutes = hour * 60 + minute;
-        return slotMinutes > nowMinutes;
+        const [h, m] = slot.split(":");
+        return (parseInt(h, 10) * 60 + parseInt(m, 10)) > nowMinutes;
       });
     }
 
