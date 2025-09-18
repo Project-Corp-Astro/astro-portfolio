@@ -66,8 +66,8 @@ const RefundPolicyModal = ({ open, onAccept, onClose }) => {
             <li>
               <strong>Getting Your Money Back</strong>
               <ul className="list-disc pl-6 mt-1">
-                <li>If we approve your refund, you'll see it back in your account within 7-10 business days.</li>
-                <li>We'll use the same payment method you used originally, and any small processing fees might be deducted.</li>
+                <li>Refund will be credited within 2-3 days to the original bank payment method</li>
+                <li>Any small processing fees might be deducted.</li>
               </ul>
             </li>
             <li>
