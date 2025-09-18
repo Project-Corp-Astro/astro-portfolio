@@ -134,21 +134,12 @@ function getAllSlots() {
 }
 
 const BUSINESS_TZ = process.env.BUSINESS_TZ || 'Asia/Kolkata';
-
-function formatYMD(date, timeZone = BUSINESS_TZ) {
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  });
+function formatYMD(d, tz = BUSINESS_TZ) {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
 }
-
-function getNowMinutesInTz(timeZone = BUSINESS_TZ) {
-  const now = new Date();
-  const parts = new Intl.DateTimeFormat('en-GB', { timeZone, hour12: false, hour: '2-digit', minute: '2-digit' }).formatToParts(now);
-  const hh = parseInt(parts.find(p => p.type === 'hour').value, 10);
-  const mm = parseInt(parts.find(p => p.type === 'minute').value, 10);
-  return hh * 60 + mm;
+function nowMinutes(tz = BUSINESS_TZ) {
+  const parts = new Intl.DateTimeFormat('en-GB', { timeZone: tz, hour12: false, hour: '2-digit', minute: '2-digit' }).formatToParts(new Date());
+  return parseInt(parts.find(p=>p.type==='hour').value)*60 + parseInt(parts.find(p=>p.type==='minute').value);
 }
 
 // Endpoint to get available slots for a date
@@ -164,10 +155,9 @@ app.get("/api/available-slots", async (req, res) => {
 
     const todayYMD = formatYMD(new Date(), BUSINESS_TZ);
     if (date === todayYMD) {
-      const nowMinutes = getNowMinutesInTz(BUSINESS_TZ);
-      allSlots = allSlots.filter(slot => {
-        const [h, m] = slot.split(":");
-        return (parseInt(h, 10) * 60 + parseInt(m, 10)) > nowMinutes;
+      const cut = nowMinutes(BUSINESS_TZ);
+      allSlots = allSlots.filter(s => {
+        const [h,m] = s.split(':'); return (+h*60 + +m) > cut;
       });
     }
 
