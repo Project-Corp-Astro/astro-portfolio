@@ -264,24 +264,46 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 
     setIsProcessing(true);
 
-    // Simulate payment processing
-    setTimeout(() => {
-      // Simulate 90% success rate
-      const isSuccess = Math.random() > 0.1;
-      
-      if (isSuccess) {
-        onSuccess({
-          amount,
-          transactionId: 'TXN' + Math.random().toString(36).substr(2, 9).toUpperCase(),
-          paymentMethod: detectedCardType?.name || 'Credit Card',
-          timestamp: new Date().toISOString()
-        });
-      } else {
-        onFailure('Payment failed. Please try again with a different card.');
-      }
-      
+    try {
+      // Create Razorpay order (amount in paise)
+      const API_BASE = import.meta.env.VITE_API_BASE || '';
+      const orderRes = await fetch(`${API_BASE}/api/create-order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: Math.round(amount * 100) }),
+      });
+      const order = await orderRes.json();
+      if (!order?.id) throw new Error('Failed to create order');
+
+      const key = import.meta.env.VITE_RAZORPAY_KEY_ID;
+      if (!key) throw new Error('Missing VITE_RAZORPAY_KEY_ID');
+
+      const options: any = {
+        key,
+        amount: order.amount,
+        currency: 'INR',
+        name: 'Corp Astro',
+        description: serviceName,
+        order_id: order.id,
+        handler: (response: any) => {
+          onSuccess({
+            amount,
+            transactionId: response.razorpay_payment_id,
+            paymentMethod: 'Razorpay',
+            timestamp: new Date().toISOString(),
+            razorpay: response,
+          });
+          setIsProcessing(false);
+        },
+        modal: { ondismiss: () => { onFailure('Payment cancelled'); setIsProcessing(false); } },
+      };
+      // @ts-ignore
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (err: any) {
+      onFailure(err?.message || 'Payment failed');
       setIsProcessing(false);
-    }, 2000);
+    }
   };
 
   return createPortal(
