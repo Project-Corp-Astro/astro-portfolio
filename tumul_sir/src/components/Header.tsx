@@ -131,7 +131,7 @@ const Header = () => {
             About
           </button>
           
-          {/* Services Dropdown */}
+          {/* Services Dropdown
           <div className="relative services-dropdown">
             <button 
               onClick={toggleServicesDropdown}
@@ -170,7 +170,7 @@ const Header = () => {
                 ))}
               </div>
             )}
-          </div>
+          </div> */}
 
           <button 
             onClick={() => {
@@ -221,7 +221,7 @@ const Header = () => {
               About
             </button>
             
-            {/* Mobile Services Section */}
+            {/* Mobile Services Section
             <div className="space-y-2">
               <button
                 onClick={toggleMobileServices}
@@ -256,7 +256,7 @@ const Header = () => {
                   ))}
                 </div>
               )}
-            </div>
+            </div> */}
 
             <button 
               onClick={() => {

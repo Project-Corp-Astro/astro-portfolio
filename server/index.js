@@ -1,4 +1,5 @@
 import express from "express";
+import Razorpay from "razorpay";
 import nodemailer from "nodemailer";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -17,6 +18,32 @@ connectDB();
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Razorpay setup (optional if keys not present)
+const razorpay = (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET)
+  ? new Razorpay({ key_id: process.env.RAZORPAY_KEY_ID, key_secret: process.env.RAZORPAY_KEY_SECRET })
+  : null;
+
+// Create Razorpay order (amount in paise)
+app.post("/api/create-order", async (req, res) => {
+  try {
+    if (!razorpay) return res.status(500).json({ error: "Payment gateway not configured" });
+    const { amount, receipt } = req.body || {};
+    if (!amount || Number.isNaN(Number(amount))) {
+      return res.status(400).json({ error: "Missing or invalid amount" });
+    }
+    const order = await razorpay.orders.create({
+      amount: Number(amount),
+      currency: "INR",
+      receipt: receipt || `rcpt_${Date.now()}`,
+      payment_capture: 1,
+    });
+    res.json(order);
+  } catch (err) {
+    console.error("Create order error:", err);
+    res.status(500).json({ error: "Failed to create order" });
+  }
+});
 
 // Test endpoint
 app.get("/api/test", (req, res) => {
