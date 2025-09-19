@@ -93,7 +93,7 @@ const RefundPolicy = () => {
                 Getting Your Money Back
               </h2>
               <div className="text-center text-gray-700 font-semibold leading-relaxed space-y-3">
-                <p>If we approve your refund, you'll see it back in your account within 7-10 business days.</p>
+                <p>If we approve your refund, the amount will be credited to your account within 7–10 business days.</p>
                 <p>We'll use the same payment method you used originally, and any small processing fees might be deducted.</p>
               </div>
             </section>
