@@ -16,6 +16,9 @@ const NotFound = React.lazy(() => import("./pages/NotFound"))
 const TermsAndConditions = React.lazy(() => import("./pages/TermsAndConditions"))
 const RefundPolicy = React.lazy(() => import("./pages/RefundPolicy"))
 const PrivacyPolicy = React.lazy(() => import("./pages/PrivacyPolicy"))
+const Cart = React.lazy(() => import("./pages/Cart"))
+const Checkout = React.lazy(() => import("./pages/Checkout"))
+const OrderConfirmation = React.lazy(() => import("./pages/OrderConfirmation"))
 const ParticleBackground = React.lazy(() => import("@/components/ParticleBackground"))
 const Chatbot = React.lazy(() => import("@/components/Chatbot"))
 const TermsViewModal = React.lazy(() => import("@/components/TermsViewModal"))
@@ -82,6 +85,9 @@ const AppRoutes = () => {
             <Route path="/commercial-vaastu" element={renderWithLayout(<Commercial />)} /> 
             <Route path="/signature-analysis" element={renderWithLayout(<Signature />)} />
             <Route path="/knowmore" element={renderWithLayout(<KnowMore />)} />
+            <Route path="/cart" element={renderWithLayout(<Cart />)} />
+            <Route path="/checkout" element={renderWithLayout(<Checkout />)} />
+            <Route path="/order/:id" element={renderWithLayout(<OrderConfirmation />)} />
             
             {/* Legal Pages */}
             <Route path="/terms-and-conditions" element={renderWithLayout(<TermsAndConditions />)} />

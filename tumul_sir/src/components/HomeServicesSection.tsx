@@ -1,64 +1,74 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Star, Sun, Moon, Calculator, Eye, Brain, Zap, TrendingUp } from "lucide-react";
 import React, { Suspense } from "react";
+import { useNavigate } from "react-router-dom";
 
 const HomeServicesSection = () => {
+  const navigate = useNavigate();
   const services = [
     {
       icon: Star,
       title: "Vedic Astrology Consultation",
       description: "Transform your life with ancient wisdom. Our comprehensive Vedic Astrology analysis reveals your unique karmic map, strengths, and challenges using the sidereal zodiac for precise, personalized guidance.",
       color: "from-purple-400 to-pink-400",
-      price: "₹4,999"
+      price: "₹4,999",
+      serviceId: "vedic-astrology"
     },
     {
       icon: Calculator,
       title: "Numerology & Nameology",
       description: "Harness the power of numbers and names to optimize business success and personal growth. Discover your Life Path and understand how your name shapes your destiny and success.",
       color: "from-blue-400 to-cyan-400",
-      price: "₹1,999"
+      price: "₹1,999",
+      serviceId: "numerology"
     },
     {
       icon: Sun,
       title: "Commercial Vaastu",
       description: "Optimize your business space for maximum prosperity and positive energy flow. Our Commercial Vaastu solutions align your workplace with natural energies to attract growth and boost productivity.",
       color: "from-orange-400 to-yellow-400",
-      price: "₹7,999"
+      price: "₹7,999",
+      serviceId: "commercial-vaastu"
     },
     {
       icon: Moon,
       title: "Signature Analysis",
       description: "Understand personality traits and optimize signatures for success and prosperity. Our signature analysis helps you enhance your personal brand and achieve greater success.",
       color: "from-indigo-400 to-purple-400",
-      price: "₹3,999"
+      price: "₹3,999",
+      serviceId: "signature-analysis"
     },
     {
       icon: Eye,
       title: "Palmistry & Hand Reading",
       description: "Discover your life's journey through the ancient art of palmistry. Our expert analysis reveals your personality traits, career potential, and life path through detailed hand reading.",
       color: "from-green-400 to-emerald-400",
-      price: "₹2,999"
+      price: "₹2,999",
+      serviceId: "nameology"
     },
     {
       icon: Brain,
       title: "Mind & Meditation Guidance",
       description: "Achieve mental clarity and spiritual growth through personalized meditation techniques. Our guidance helps you develop mindfulness practices for stress relief and inner peace.",
       color: "from-teal-400 to-blue-400",
-      price: "₹5,999"
+      price: "₹5,999",
+      serviceId: "mind-meditation-guidance"
     },
     {
       icon: Zap,
       title: "Energy Healing & Chakra Balancing",
       description: "Restore balance and vitality through energy healing practices. Our chakra balancing sessions help clear blockages and promote physical, emotional, and spiritual well-being.",
       color: "from-yellow-400 to-orange-400",
-      price: "₹6,999"
+      price: "₹6,999",
+      serviceId: "energy-healing-chakra"
     },
     {
       icon: TrendingUp,
       title: "Business Success Coaching",
       description: "Accelerate your business growth with spiritual wisdom and strategic guidance. Our coaching combines ancient principles with modern business strategies for sustainable success.",
       color: "from-red-400 to-pink-400",
-      price: "₹8,999"
+      price: "₹8,999",
+      serviceId: "business-success-coaching"
     }
   ];
 
@@ -173,7 +183,7 @@ const HomeServicesSection = () => {
                         <button
                           type="button"
                           className="inline-flex items-center rounded-md bg-orange-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-orange-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 transition"
-                          onClick={() => alert(`Booking: ${service.title}`)}
+                          onClick={() => navigate(`/cart?service=${service.serviceId}`)}
                         >
                           Book Now
                         </button>
