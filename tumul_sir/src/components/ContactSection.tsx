@@ -33,9 +33,10 @@ const ContactSection = () => {
               </p>
             </CardContent>
           </Card>
-          {/* Why Choose Corp Astro */}
+          {/* Why Choose CORPASTRO CONSULTANCY */}
           <div>
-            <h3 className="text-2xl font-serif font-bold mb-6 text-lavender-dark text-center">Why Choose Corp Astro?</h3>
+            <h3 className="text-2xl font-serif font-bold mb-6 text-lavender-dark text-center">Why Choose CORPASTRO?</h3>
+            <p className="text-xs text-center text-lavender-dark/60 mb-4">CORPASTRO CONSULTANCY PRIVATE LIMITED</p>
             <ul className="space-y-4">
               <li className="flex items-center justify-center gap-3">
                 <img

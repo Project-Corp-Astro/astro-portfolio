@@ -21,8 +21,8 @@ const Footer = () => {
           <div className="md:col-span-2 w-full flex flex-col items-center md:items-start">
             <div className="flex items-center justify-center md:justify-start space-x-3 mb-4">
               <div>
-                {/* <h3 className="text-lg md:text-xl font-serif font-semibold text-orange">Corp Astro</h3> */}
-                <h3 className="text-lg md:text-lg text-lavender-dark/90">Dr. Tumul Raathi - Business Astrologer</h3>
+                <h3 className="text-lg md:text-lg text-lavender-dark/90 font-semibold">CORPASTRO CONSULTANCY PRIVATE LIMITED</h3>
+                <p className="text-sm text-lavender-dark/70 mt-1">Dr. Tumul Raathi - Business Astrologer</p>
               </div>
             </div>
             <p className="text-body-warm/95 mb-4 max-w-md mx-auto md:mx-0 text-sm text-semibold md:text-base leading-relaxed">
@@ -53,7 +53,7 @@ const Footer = () => {
                   ></iframe>
                 </div>
               </div>
-              <p>© 2025 Corp Astro. All rights reserved.</p>
+              <p>© 2025 CORPASTRO CONSULTANCY PRIVATE LIMITED. All rights reserved.</p>
             </div>
           </div>
           
@@ -107,7 +107,7 @@ const Footer = () => {
         
   <div className="border-t border-orange/30 pt-6 md:pt-8 mt-6 md:mt-8 flex flex-col md:flex-row items-center justify-between text-xs md:text-sm text-foreground/85 gap-2 text-center">
           <p>Designed with cosmic intention • Built for transformation</p>
-          <p className="opacity-80">&copy; 2025 Corp Astro</p>
+          <p className="opacity-80">&copy; 2025 CORPASTRO CONSULTANCY PRIVATE LIMITED</p>
         </div>
       </div>
 

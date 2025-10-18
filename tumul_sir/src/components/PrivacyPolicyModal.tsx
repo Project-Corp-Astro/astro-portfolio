@@ -109,6 +109,7 @@ const PrivacyPolicyModal = ({ open, onClose }) => {
             <li>
               <strong>Get in Touch</strong>
               <ul className="list-disc pl-6 text-xs mt-1">
+                <li>CORPASTRO CONSULTANCY PRIVATE LIMITED</li>
                 <li>Dr. Tumul Raathi</li>
                 <li>Email: consult@corpastro.com</li>
                 <li>Phone: +91 93460 35354</li>
@@ -116,7 +117,7 @@ const PrivacyPolicyModal = ({ open, onClose }) => {
               </ul>
             </li>
           </ol>
-          <p className="mt-4 text-xs text-gray-500">Dr. Tumul Raathi, 502, Lalithanjali Apartment, 6-3-347/11, Dwarakapuri Colony, Punjagutta, Hyderabad, Telangana, India - 500082</p>
+          <p className="mt-4 text-xs text-gray-500">CORPASTRO CONSULTANCY PRIVATE LIMITED - Dr. Tumul Raathi, 502, Lalithanjali Apartment, 6-3-347/11, Dwarakapuri Colony, Punjagutta, Hyderabad, Telangana, India - 500082</p>
         </div>
     </Modal>
   );

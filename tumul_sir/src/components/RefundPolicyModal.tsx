@@ -73,11 +73,11 @@ const RefundPolicyModal = ({ open, onAccept, onClose }) => {
             <li>
               <strong>How to Ask for a Refund</strong>
               <ul className="list-disc pl-6 mt-1">
-                <li>Just reach out to us with:</li>
-                <li>Your name and when you booked</li>
-                <li>Why you're requesting a refund</li>
-                <li>Your payment confirmation (if you have it)</li>
-                <li>We'll get back to you within 2-3 days to let you know our decision.</li>
+                <li>Please contact us with the following information:</li>
+                <li>Your name and booking date</li>
+                <li>Reason for refund request</li>
+                <li>Payment confirmation details (if available)</li>
+                <li>Refund will be credited to your original payment method within 2 to 4 business days after approval.</li>
               </ul>
             </li>
             <li>

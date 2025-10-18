@@ -11,6 +11,7 @@ const VedicAstrology = React.lazy(() => import("./pages/VedicAstrology"))
 const Numerology = React.lazy(() => import("./pages/Numerology"))
 const Commercial = React.lazy(() => import("./pages/Commercial"))
 const Signature = React.lazy(() => import("./pages/Signature"))
+const Services = React.lazy(() => import("./pages/Services"))
 const KnowMore = React.lazy(() => import("./pages/KnowMore"))
 const NotFound = React.lazy(() => import("./pages/NotFound"))
 const TermsAndConditions = React.lazy(() => import("./pages/TermsAndConditions"))
@@ -80,6 +81,7 @@ const AppRoutes = () => {
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center"> Loading... </div>}>
           <Routes location={background || location} key={location.pathname}>
             <Route path="/" element={renderWithLayout(<Index />)} />
+            <Route path="/services" element={renderWithLayout(<Services />)} />
             <Route path="/vedic-astrology" element={renderWithLayout(<VedicAstrology />)} />
             <Route path="/numerology-nameology" element={renderWithLayout(<Numerology />)} />
             <Route path="/commercial-vaastu" element={renderWithLayout(<Commercial />)} /> 

@@ -282,7 +282,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
         key,
         amount: order.amount,
         currency: 'INR',
-        name: 'Corp Astro',
+        name: 'CORPASTRO CONSULTANCY PRIVATE LIMITED',
         description: serviceName,
         order_id: order.id,
         handler: (response: any) => {

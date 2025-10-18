@@ -103,6 +103,7 @@ const TermsAndConditions = () => {
             <div className="mt-12 p-6 bg-orange/10 rounded-xl border border-orange/20">
               <h3 className="text-xl font-bold text-gray-800 mb-4">Contact Information</h3>
               <div className="text-gray-700 space-y-2">
+                <p><strong>CORPASTRO CONSULTANCY PRIVATE LIMITED</strong></p>
                 <p><strong>Dr. Tumul Raathi</strong></p>
                 <p>502, Lalithanjali Apartment</p>
                 <p>6-3-347/11, Dwarakapuri Colony</p>

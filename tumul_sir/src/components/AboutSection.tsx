@@ -38,7 +38,7 @@ const AboutSection = () => {
                     />    
                   </div>
                   <div>
-                    <h3 className="text-lg md:text-xl font-serif font-semibold text-orange-900 mb-2 font-bold group-hover:text-orange-700 transition-colors duration-300">
+                    <h3 className="text-lg md:text-xl font-serif font-bold text-orange-900 mb-2 group-hover:text-orange-700 transition-colors duration-300">
                       Multi-Disciplinary Expertise
                     </h3>
                     <p className="text-gray-700 font-bold text-sm md:text-base group-hover:text-gray-800 transition-colors duration-300">
@@ -61,7 +61,7 @@ const AboutSection = () => {
                     />    
                   </div>
                   <div>
-                    <h3 className="text-lg md:text-xl font-serif font-semibold text-orange-900 mb-2 font-bold group-hover:text-orange-700 transition-colors duration-300">
+                    <h3 className="text-lg md:text-xl font-serif font-bold text-orange-900 mb-2 group-hover:text-orange-700 transition-colors duration-300">
                       Corporate Focus
                     </h3>
                     <p className="text-gray-700 font-bold text-sm md:text-base group-hover:text-gray-800 transition-colors duration-300">
@@ -84,7 +84,7 @@ const AboutSection = () => {
                     />    
                   </div>
                   <div>
-                    <h3 className="text-lg md:text-xl font-serif font-semibold text-orange-900 mb-2 font-bold group-hover:text-orange-700 transition-colors duration-300">
+                    <h3 className="text-lg md:text-xl font-serif font-bold text-orange-900 mb-2 group-hover:text-orange-700 transition-colors duration-300">
                       Scientific Methodology
                     </h3>
                     <p className="text-gray-700 font-bold text-sm md:text-base group-hover:text-gray-800 transition-colors duration-300">
@@ -94,6 +94,15 @@ const AboutSection = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+        
+        {/* Business Registration Info */}
+        <div className="mt-12 text-center">
+          <div className="bg-white/40 backdrop-blur-md rounded-xl p-6 border border-white/50 shadow-lg">
+            <h3 className="text-lg font-serif font-semibold text-lavender-dark mb-2">Registered Business Entity</h3>
+            <p className="text-lavender-dark/80 font-medium">CORPASTRO CONSULTANCY PRIVATE LIMITED</p>
+            <p className="text-sm text-lavender-dark/60 mt-2">Professional astrological consultancy services since 2018</p>
           </div>
         </div>
       </div>
