@@ -1,0 +1,53 @@
+services:
+  # Backend API Service
+  - type: web
+    name: astro-backend
+    runtime: node
+    region: oregon
+    plan: starter
+    rootDir: ./server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: EMAIL_TO
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: BUSINESS_TZ
+        value: Asia/Kolkata
+    healthCheckPath: /api/test
+
+  # Frontend Static Site
+  - type: web
+    name: astro-frontend
+    runtime: static
+    region: oregon
+    plan: starter
+    rootDir: ./tumul_sir
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    pullRequestPreviewsEnabled: true
+    envVars:
+      - key: VITE_API_BASE
+        fromService:
+          type: web
+          name: astro-backend
+          envVarKey: RENDER_EXTERNAL_URL
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

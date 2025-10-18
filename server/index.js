@@ -16,7 +16,30 @@ dotenv.config();
 connectDB();
 
 const app = express();
-app.use(cors());
+
+// CORS configuration - update with your frontend URL after deployment
+const allowedOrigins = [
+  'http://localhost:8080',
+  'http://localhost:3000',
+  'http://localhost:5173',
+  // Add your Render frontend URL here after deployment:
+  // 'https://your-frontend-url.onrender.com',
+];
+
+app.use(cors({
+  origin: function(origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
 app.use(express.json());
 
 // Razorpay setup (optional if keys not present)

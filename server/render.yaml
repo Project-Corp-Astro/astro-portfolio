@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: astro-backend
+    runtime: node
+    region: singapore
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 18.17.0
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      # Add your environment variables in Render dashboard:
+      # MONGODB_URI, EMAIL_USER, EMAIL_PASS, EMAIL_TO
+      # RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET, OPENAI_API_KEY
+      # BUSINESS_TZ

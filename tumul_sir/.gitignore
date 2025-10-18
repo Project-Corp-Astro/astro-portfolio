@@ -12,11 +12,15 @@ pnpm-debug.log*
 # Dependency directories
 jspm_packages/
 
-
+# Environment variables (keep .env.production for template)
+.env
+.env.local
+.env.development.local
+.env.test.local
 
 # Production
-.env
-.env.*
+dist
+dist-ssr
 
 # System files
 .DS_Store
