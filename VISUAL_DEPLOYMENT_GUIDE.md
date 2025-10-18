@@ -322,10 +322,12 @@ Before you begin, gather these credentials and have them ready in a text file:
 │                                         │
 │  Basic Settings:                        │
 │  Name: astro-frontend                  │
-│  Region: [Select region ▼]            │
 │  Branch: main                          │
 │  Root Directory: tumul_sir             │
 │  Publish Directory: dist               │
+│                                         │
+│  ⓘ Static sites are deployed globally  │
+│     (No region selection needed)       │
 │                                         │
 │  Environment Variables: (Optional)      │
 │  💡 Can add VITE_API_URL later         │
@@ -335,7 +337,8 @@ Before you begin, gather these credentials and have them ready in a text file:
 ```
 
 **Actions:**
-1. **Select Region:** Same as backend (Singapore)
+1. **No region selection** - Static sites are automatically deployed to Render's global CDN
+   - ℹ️ If you see an error about region, just ignore that field
 2. **Leave environment variables empty for now**
    - We'll add the backend URL after backend deploys
 3. Click **"Save & Continue"**
@@ -343,6 +346,8 @@ Before you begin, gather these credentials and have them ready in a text file:
 **What success looks like:**
 - Frontend configuration saved
 - Ready to review and deploy
+
+**💡 Note:** Static sites are served from Render's global CDN, which means they're automatically distributed worldwide for fast access from anywhere!
 
 ---
 
@@ -363,7 +368,7 @@ Before you begin, gather these credentials and have them ready in a text file:
 │                                         │
 │  2. astro-frontend                     │
 │     Type: Static Site                  │
-│     Region: Singapore                  │
+│     Region: Global CDN                 │
 │     Env Vars: 0                        │
 │     Estimated: Free                    │
 │                                         │
@@ -376,14 +381,17 @@ Before you begin, gather these credentials and have them ready in a text file:
 **Actions:**
 1. **Review everything carefully:**
    - ✓ Both services listed
-   - ✓ Correct regions
-   - ✓ Environment variables configured
+   - ✓ Backend has region selected
+   - ✓ Frontend shows "Global CDN" (this is correct!)
+   - ✓ Environment variables configured for backend
    
 2. Click **"Apply Blueprint"** or **"Deploy"**
 
 **What success looks like:**
 - Deployment starts immediately
 - You're redirected to dashboard showing both services
+
+**💡 Tip:** The frontend being on "Global CDN" is actually better than a single region - it means your site will load fast from anywhere in the world!
 
 ---
 
@@ -704,6 +712,28 @@ https://astro-frontend-xyz789.onrender.com
 ---
 
 ## 🐛 TROUBLESHOOTING GUIDE
+
+### Problem: "Static sites cannot have a region" Error
+
+**What you see:**
+```
+❌ Service[1] static sites cannot have a region
+```
+
+**Solution:**
+This is expected! Static sites don't need a region because they're deployed to Render's global CDN.
+
+**Actions:**
+1. **If using Blueprint:** Just ignore any region field for the frontend
+2. **If configuring manually:** Don't select a region for static sites
+3. This is NOT an error - continue with deployment
+
+**Why this happens:**
+- Backend (Web Service) = Runs in a specific region (Singapore, etc.)
+- Frontend (Static Site) = Deployed globally via CDN automatically
+- Your frontend will be fast from anywhere in the world!
+
+---
 
 ### Problem: Backend Build Fails
 
