@@ -22,8 +22,11 @@ const allowedOrigins = [
   'http://localhost:8080',
   'http://localhost:3000',
   'http://localhost:5173',
-  // Add your Render frontend URL here after deployment:
-  // 'https://your-frontend-url.onrender.com',
+  // Render frontend URL:
+  'https://astro-frontend-xkxj.onrender.com',
+  // Future custom domain:
+  'https://corporateastro.com',
+  'https://www.corporateastro.com',
 ];
 
 app.use(cors({
