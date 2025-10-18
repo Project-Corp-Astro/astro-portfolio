@@ -34,20 +34,12 @@ services:
   # Frontend Static Site
   - type: web
     name: astro-frontend
-    runtime: static
-    region: oregon
-    plan: starter
-    rootDir: ./tumul_sir
     buildCommand: npm install && npm run build
     staticPublishPath: ./dist
-    pullRequestPreviewsEnabled: true
+    rootDir: ./tumul_sir
     envVars:
       - key: VITE_API_BASE
         fromService:
           type: web
           name: astro-backend
           envVarKey: RENDER_EXTERNAL_URL
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
